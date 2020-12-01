@@ -270,22 +270,6 @@ if (!function_exists('media_or_placeholder')) {
     }
 }
 
-if (!function_exists('password_by_name')) {
-    /**
-     * Generate password by name
-     *
-     * @param  string  $name
-     * @return string
-     */
-    function password_by_name(string $name)
-    {
-        $name = \Illuminate\Support\Str::of($name)->lower()->explode(' ');
-        $password = \Illuminate\Support\Arr::first($name);
-
-        return $password;
-    }
-}
-
 if (!function_exists('route_ends_with')) {
     /**
      * Determine if the given route is the end of the current route.
