@@ -286,30 +286,6 @@ if (!function_exists('password_by_name')) {
     }
 }
 
-if (!function_exists('publisher')) {
-    /**
-     * Get publisher name.
-     *
-     * @return string
-     */
-    function publisher()
-    {
-        return 'Kanekes.com';
-    }
-}
-
-if (!function_exists('publisher_link')) {
-    /**
-     * Get publisher link.
-     *
-     * @return string
-     */
-    function publisher_link()
-    {
-        return 'http://kanekes.com';
-    }
-}
-
 if (!function_exists('route_ends_with')) {
     /**
      * Determine if the given route is the end of the current route.
