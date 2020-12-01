@@ -195,6 +195,21 @@ if (!function_exists('current_route_label')) {
     }
 }
 
+if (!function_exists('first_name')) {
+    /**
+     * Get first name from full name
+     *
+     * @param  string  $name
+     * @return string
+     */
+    function first_name(string $name)
+    {
+        $name = \Illuminate\Support\Str::of($name)->lower()->explode(' ');
+
+        return \Illuminate\Support\Arr::first($name);
+    }
+}
+
 if (!function_exists('image_or_placeholder')) {
     /**
      * Determine if the given url is url or not and get over by placeholder.
@@ -252,6 +267,21 @@ if (!function_exists('last_media')) {
     }
 }
 
+if (!function_exists('last_name')) {
+    /**
+     * Get last name from full name
+     *
+     * @param  string  $name
+     * @return string
+     */
+    function last_name(string $name)
+    {
+        $name = \Illuminate\Support\Str::of($name)->lower()->explode(' ');
+
+        return \Illuminate\Support\Arr::last($name);
+    }
+}
+
 if (!function_exists('media_or_placeholder')) {
     /**
      * Get first media by spatie/laravel-medialibrary or placeholder
@@ -267,46 +297,6 @@ if (!function_exists('media_or_placeholder')) {
         }
 
         return image_placeholder($size, $text);
-    }
-}
-
-if (!function_exists('password_by_name')) {
-    /**
-     * Generate password by name
-     *
-     * @param  string  $name
-     * @return string
-     */
-    function password_by_name(string $name)
-    {
-        $name = \Illuminate\Support\Str::of($name)->lower()->explode(' ');
-        $password = \Illuminate\Support\Arr::first($name);
-
-        return $password;
-    }
-}
-
-if (!function_exists('publisher')) {
-    /**
-     * Get publisher name.
-     *
-     * @return string
-     */
-    function publisher()
-    {
-        return 'Kanekes.com';
-    }
-}
-
-if (!function_exists('publisher_link')) {
-    /**
-     * Get publisher link.
-     *
-     * @return string
-     */
-    function publisher_link()
-    {
-        return 'http://kanekes.com';
     }
 }
 
