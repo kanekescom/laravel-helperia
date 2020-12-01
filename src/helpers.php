@@ -145,7 +145,7 @@ if (!function_exists('avatar')) {
      */
     function avatar(array $settings)
     {
-        return url('https://ui-avatars.com/api/', $settings);
+        return url('https://ui-avatars.com/api/?' . http_build_query($settings));
     }
 }
 
