@@ -195,6 +195,21 @@ if (!function_exists('current_route_label')) {
     }
 }
 
+if (!function_exists('first_name')) {
+    /**
+     * Get first name from full name
+     *
+     * @param  string  $name
+     * @return string
+     */
+    function first_name(string $name)
+    {
+        $name = \Illuminate\Support\Str::of($name)->lower()->explode(' ');
+
+        return \Illuminate\Support\Arr::first($name);
+    }
+}
+
 if (!function_exists('image_or_placeholder')) {
     /**
      * Determine if the given url is url or not and get over by placeholder.
@@ -249,6 +264,21 @@ if (!function_exists('last_media')) {
     function last_media($model, $collection = null)
     {
         return optional($model->getMedia($collection)->last());
+    }
+}
+
+if (!function_exists('last_name')) {
+    /**
+     * Get last name from full name
+     *
+     * @param  string  $name
+     * @return string
+     */
+    function last_name(string $name)
+    {
+        $name = \Illuminate\Support\Str::of($name)->lower()->explode(' ');
+
+        return \Illuminate\Support\Arr::last($name);
     }
 }
 
