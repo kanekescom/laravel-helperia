@@ -129,7 +129,7 @@ if (!function_exists('auth_polymorphic')) {
     {
         $class = new $className;
 
-        return auth()->user()->userable_type == $className
+        return optional(auth()->user())->userable_type == $className
             && optional($class::find(auth()->user()->userable_id))->exists()
             ? optional(auth()->user()->userable)
             : optional();
