@@ -343,10 +343,24 @@ if (!function_exists('storage_delete')) {
      * Delete file using storage.
      *
      * @param  string  $filePath
-     * @return bool
+     * @return void
      */
     function storage_delete($filePath)
     {
         return Storage::delete($filePath);
+    }
+}
+
+if (!function_exists('str_zero_leading')) {
+    /**
+     * String with zero leading.
+     *
+     * @param  integer  $i
+     * @param  integer  $length
+     * @return string
+     */
+    function str_zero_leading($i, $length = 1)
+    {
+        return str_pad($i, 2, $length, STR_PAD_LEFT);
     }
 }
