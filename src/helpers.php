@@ -300,6 +300,19 @@ if (!function_exists('media_or_placeholder')) {
     }
 }
 
+if (!function_exists('percent_format')) {
+    /**
+     * Generate percent format
+     *
+     * @param  float  $percent
+     * @return string
+     */
+    function percent_format($percent)
+    {
+        return "{$percent}%";
+    }
+}
+
 if (!function_exists('route_ends_with')) {
     /**
      * Determine if the given route is the end of the current route.
