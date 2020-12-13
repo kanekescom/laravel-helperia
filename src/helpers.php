@@ -361,6 +361,6 @@ if (!function_exists('str_zero_leading')) {
      */
     function str_zero_leading($i, $length = 1)
     {
-        return str_pad($i, 2, $length, STR_PAD_LEFT);
+        return str_pad($i, $length, '0', STR_PAD_LEFT);
     }
 }
