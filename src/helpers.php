@@ -300,16 +300,16 @@ if (!function_exists('media_or_placeholder')) {
     }
 }
 
-if (!function_exists('page_size')) {
+if (!function_exists('pagination_size')) {
     /**
      * Get page size for pagination
      *
      * @param  integer  $size
      * @return string
      */
-    function page_size($size = null)
+    function pagination_size($size = null)
     {
-        return config('settings.currency', $size);
+        return config('settings.pagination.size', $size);
     }
 }
 
