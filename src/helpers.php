@@ -300,6 +300,19 @@ if (!function_exists('media_or_placeholder')) {
     }
 }
 
+if (!function_exists('page_size')) {
+    /**
+     * Get page size for pagination
+     *
+     * @param  integer  $size
+     * @return string
+     */
+    function page_size($size = null)
+    {
+        return config('settings.currency', $size);
+    }
+}
+
 if (!function_exists('percent_format')) {
     /**
      * Generate percent format
