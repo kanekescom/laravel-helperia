@@ -160,7 +160,7 @@ if (!function_exists('currency_format')) {
     {
         $format = numfmt_create(config('app.locale'), NumberFormatter::CURRENCY);
 
-        return numfmt_format_currency($format, $currency, config('app.currency'));
+        return numfmt_format_currency($format, $currency, config('settings.currency'));
     }
 }
 
