@@ -1,7 +1,7 @@
 {
     "name": "kanekescom/laravel-helperia",
+    "description": "Helper for rapid Laravel development improvements",
     "type": "library",
-    "description": "Laravel Helperia",
     "license": "MIT",
     "authors": [
         {
@@ -12,34 +12,48 @@
     ],
     "homepage": "https://github.com/kanekescom/laravel-helperia",
     "keywords": [
-        "Laravel",
-        "Helperia"
+        "laravel",
+        "helper",
+        "laravel-helperia",
+        "helperia"
     ],
     "require": {
-        "illuminate/support": "~7|~8"
+        "illuminate/support": "^8.0|^9.0|^10.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~9.0",
-        "orchestra/testbench": "~5|~6"
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.0"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
+        "psr-4": {
+            "Kanekescom\\Helperia\\": "src/"
+        },
         "files": [
             "src/helpers.php"
         ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Kanekescom\\LaravelHelperia\\Tests\\": "tests"
-        }
+            "Kanekescom\\Helperia\\Tests\\": "tests"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "extra": {
         "laravel": {
-            "providers": []
+            "providers": [
+                "Kanekescom\\Heperia\\HeperiaServiceProvider"
+            ],
+            "aliases": {}
+        },
+        "branch-alias": {
+            "dev-main": "1.x-dev"
         }
     },
-    "config": {
-        "sort-packages": true
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "scripts": {
+        "test": "phpunit"
+    }
 }
