@@ -8,5 +8,5 @@ class ClassExtender
 {
     use HasMethodCaller;
 
-    private $class;
+    protected $class;
 }
