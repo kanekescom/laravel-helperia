@@ -45,7 +45,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Kanekescom\\Heperia\\HeperiaServiceProvider"
+                "Kanekescom\\Helperia\\HelperiaServiceProvider"
             ],
             "aliases": {}
         },
