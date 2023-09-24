@@ -4,7 +4,7 @@ namespace Kanekescom\Helperia\Support;
 
 use Kanekescom\Helperia\Traits\HasMethodCaller;
 
-class MethodCaller
+class ClassExtender
 {
     use HasMethodCaller;
 
