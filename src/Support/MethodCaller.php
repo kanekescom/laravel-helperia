@@ -1,6 +1,6 @@
 <?php
 
-namespace Kanekescom\Helperia;
+namespace Kanekescom\Helperia\Support;
 
 use Kanekescom\Helperia\Traits\HasMethodCaller;
 
