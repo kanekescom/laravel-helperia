@@ -2,16 +2,25 @@
 
 namespace Kanekescom\Helperia\Tests;
 
-abstract class TestCase extends \Orchestra\Testbench\TestCase
+use Kanekescom\Helperia\HelperiaServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
+
+class TestCase extends Orchestra
 {
-    /**
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return array
-     */
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
     protected function getPackageProviders($app)
     {
         return [
-            \Kanekescom\Helperia\HelperiaServiceProvider::class,
+            HelperiaServiceProvider::class,
         ];
+    }
+
+    public function getEnvironmentSetUp($app)
+    {
+        //
     }
 }

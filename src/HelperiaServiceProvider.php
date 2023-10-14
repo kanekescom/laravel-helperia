@@ -2,39 +2,14 @@
 
 namespace Kanekescom\Helperia;
 
-use Illuminate\Support\ServiceProvider;
+use Spatie\LaravelPackageTools\Package;
+use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class HelperiaServiceProvider extends ServiceProvider
+class HelperiaServiceProvider extends PackageServiceProvider
 {
-    /**
-     * Perform post-registration booting of services.
-     */
-    public function boot(): void
+    public function configurePackage(Package $package): void
     {
-        //
-    }
-
-    /**
-     * Register any package services.
-     */
-    public function register(): void
-    {
-        //
-    }
-
-    /**
-     * Offer publishing.
-     */
-    protected function offerPublishing(): void
-    {
-        //
-    }
-
-    /**
-     * Register commands.
-     */
-    protected function registerCommands(): void
-    {
-        //
+        $package
+            ->name('laravel-helperia');
     }
 }
