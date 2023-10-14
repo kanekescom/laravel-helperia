@@ -41,7 +41,7 @@
             "Kanekescom\\Helperia\\": "src/"
         },
         "files": [
-            "src/helpers.php"
+            "src/Helpers/functions.php"
         ]
     },
     "autoload-dev": {
@@ -50,7 +50,7 @@
             "Workbench\\App\\": "workbench/app/"
         },
         "files": [
-            "src/helpers.php"
+            "src/Helpers/functions.php"
         ]
     },
     "scripts": {
