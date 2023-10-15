@@ -16,7 +16,7 @@
     backupStaticProperties="false"
 >
     <testsuites>
-        <testsuite name="Kanekescom Test Suite">
+        <testsuite name="Laravel Helperia Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
