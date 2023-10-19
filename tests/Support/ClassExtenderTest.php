@@ -1,12 +1,12 @@
 <?php
 
-test('class is an instance of Laravel Collection', function () {
+it('class is an instance of \Illuminate\Support\Collection', function () {
     $class = new \Kanekescom\Helperia\Tests\Support\ClassExtender;
 
     expect($class->class)->toBeInstanceOf(\Illuminate\Support\Collection::class);
 });
 
-test('matching an array', function () {
+it('matches an array', function () {
     $class = new \Kanekescom\Helperia\Tests\Support\ClassExtender([
         'name' => 'Achmad Hadi Kurnia',
     ]);
