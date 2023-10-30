@@ -10,9 +10,6 @@ class ClassExtender
 
     public $class;
 
-    /**
-     * Create a new instance.
-     */
     public function __construct($array = [])
     {
         $this->class = collect($array);
