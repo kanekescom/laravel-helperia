@@ -18,8 +18,7 @@ if (! function_exists('method_public')) {
         $methodNames = array_filter($methodNames, function ($method) {
             return ! $method->isConstructor()
                 && ! $method->isDestructor()
-                && ! $method->isInternal()
-                && strpos($method->name, '__') !== 0;
+                && ! $method->isInternal();
         });
 
         $methodNames = array_map(function ($method) {
@@ -39,8 +38,7 @@ if (! function_exists('method_protected')) {
         $methodNames = array_filter($methodNames, function ($method) {
             return ! $method->isConstructor()
                 && ! $method->isDestructor()
-                && ! $method->isInternal()
-                && strpos($method->name, '__') !== 0;
+                && ! $method->isInternal();
         });
 
         $methodNames = array_map(function ($method) {
@@ -60,8 +58,7 @@ if (! function_exists('method_private')) {
         $methodNames = array_filter($methodNames, function ($method) {
             return ! $method->isConstructor()
                 && ! $method->isDestructor()
-                && ! $method->isInternal()
-                && strpos($method->name, '__') !== 0;
+                && ! $method->isInternal();
         });
 
         $methodNames = array_map(function ($method) {

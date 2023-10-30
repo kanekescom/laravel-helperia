@@ -4,7 +4,7 @@ it('matches public methods', function () {
     $methods = method_public(\Kanekescom\Helperia\Tests\Helpers\MyClass::class);
 
     expect($methods->toArray())->toMatchArray([
-        'a',
+        1 => 'a',
     ]);
 });
 
