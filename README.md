@@ -28,7 +28,62 @@ composer require kanekescom/laravel-helperia
 
 ## Usage
 
-Coming Soon
+### HasMethodCaller
+
+Make your class return the functionality of another class. This is useful when you want your logic to be returned as another class, Laravel Collection for example.
+
+Here's an example of how to use it to make your classes feel like Laravel Collections.
+
+```php
+use Kanekescom\Helperia\Traits\HasMethodCaller;
+
+class MyClass
+{
+    use HasMethodCaller;
+
+    protected $class;
+
+    public function __construct($array = [])
+    {
+        $this->class = collect($array);
+    }
+}
+```
+
+or use `ClassExtender` instead.
+
+### ClassExtender
+
+```php
+use Kanekescom\Helperia\Support\ClassExtender;
+
+class MyClass extends ClassExtender
+{
+    public function __construct($array = [])
+    {
+        $this->class = collect($array);
+    }
+}
+```
+
+### Get Methods of Class
+
+Get the methods that a class has based on its visibility type. Returned as Laravel Collection.
+
+Get public methods.
+```php
+method_public(MyClass::class)
+```
+
+Get protected methods.
+```php
+method_protected(MyClass::class)
+```
+
+Get private methods.
+```php
+method_private(MyClass::class)
+```
 
 ## Testing
 
