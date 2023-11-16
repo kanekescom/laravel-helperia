@@ -72,17 +72,17 @@ Get the methods that a class has based on its visibility type. Returned as Larav
 
 Get public methods.
 ```php
-method_public(MyClass::class)
+method_public(MyClass::class);
 ```
 
 Get protected methods.
 ```php
-method_protected(MyClass::class)
+method_protected(MyClass::class);
 ```
 
 Get private methods.
 ```php
-method_private(MyClass::class)
+method_private(MyClass::class);
 ```
 
 ## Testing
