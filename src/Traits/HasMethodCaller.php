@@ -6,10 +6,10 @@ trait HasMethodCaller
 {
     public function __call($method, $parameters)
     {
-        if (method_exists(static::class, $method)) {
-            return call_user_func_array([static::class, $method], $parameters);
-        } elseif (method_exists($this->class, $method)) {
-            return call_user_func_array([$this->class, $method], $parameters);
+        $callable = method_exists(static::class, $method) ? [static::class, $method] : [$this->class, $method];
+
+        if (is_callable($callable)) {
+            return call_user_func_array($callable, $parameters);
         }
 
         throw new \BadMethodCallException("Method {$method} does not exist.");
@@ -17,12 +17,12 @@ trait HasMethodCaller
 
     public static function __callStatic($method, $parameters)
     {
-        if (method_exists(static::class, $method)) {
-            return call_user_func_array([static::class, $method], $parameters);
-        } elseif (method_exists((new static)->class, $method)) {
-            return call_user_func_array([(new static)->class, $method], $parameters);
+        $class = static::class;
+
+        if (method_exists($class, $method)) {
+            return call_user_func_array([$class, $method], $parameters);
         }
 
-        throw new \BadMethodCallException("Method {$method} does not exist.");
+        throw new \BadMethodCallException("Static method {$method} does not exist.");
     }
 }
