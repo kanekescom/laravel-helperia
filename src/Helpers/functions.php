@@ -59,3 +59,29 @@ if (! function_exists('method_private')) {
             });
     }
 }
+
+if (! function_exists('convert_date_format')) {
+    function convert_date_format($value, $input, $output, $default = null)
+    {
+        try {
+            return now()::createFromFormat($input, $value)->format($output);
+        } catch (\Exception $e) {
+            return $default;
+        }
+    }
+}
+
+if (! function_exists('parse_date_format')) {
+    function parse_date_format($value, $format, $default = null)
+    {
+        if (blank($value)) {
+            return null;
+        }
+
+        try {
+            return now()::parse($value)->format($format);
+        } catch (\Exception $e) {
+            return $default;
+        }
+    }
+}
