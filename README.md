@@ -50,7 +50,7 @@ class MyClass
 }
 ```
 
-or use `ClassExtender` instead.
+or use `ClassExtender` instead
 
 ### ClassExtender
 
@@ -70,19 +70,31 @@ class MyClass extends ClassExtender
 
 Get the methods that a class has based on its visibility type. Returned as Laravel Collection.
 
-Get public methods.
+Get public methods
 ```php
 method_public(MyClass::class);
 ```
 
-Get protected methods.
+Get protected methods
 ```php
 method_protected(MyClass::class);
 ```
 
-Get private methods.
+Get private methods
 ```php
 method_private(MyClass::class);
+```
+
+### Convert Date
+
+Convert date format
+```php
+convert_date_format('01-01-2024', 'd-m-Y', 'Y-m-d', $default = null);
+```
+
+Parse date to format.
+```php
+parse_date_format('01-01-2024', 'Y-m-d', $default = null);
 ```
 
 ## Testing
