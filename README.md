@@ -73,9 +73,21 @@ Use the `Trans` class for comprehensive translation operations:
 use Kanekescom\Helperia\Support\Trans;
 ```
 
-##### Fluent Builder API (Method Chaining)
+##### Fluent Builder API
 
-Use `translations()` helper (similar to Laravel's `collect()`) for fluent operations:
+The `TransBuilder` class provides fluent method chaining for translation operations. Use `translations()` helper (similar to Laravel's `collect()`) or `Trans::make()`:
+
+```php
+use Kanekescom\Helperia\Support\TransBuilder;
+
+// Via helper function (recommended)
+translations($data)->sortKeys()->save('lang/id.json');
+
+// Via Trans static method
+Trans::make($data)->sortKeys()->save('lang/id.json');
+```
+
+**Usage examples:**
 
 ```php
 // Clean up and save translations in one chain
@@ -103,6 +115,7 @@ $json = translations($data)
 | `sortKeys($asc)` | Sort keys A-Z or Z-A |
 | `clean()` | Remove empty + sort |
 | `addMissing($keys)` | Add missing keys |
+| `removeUnused($keys)` | Remove unused keys |
 | `removeEmpty()` | Remove empty values |
 | `onlyTranslated()` | Keep only translated |
 | `onlyUntranslated()` | Keep only untranslated |
