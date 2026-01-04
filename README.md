@@ -87,42 +87,50 @@ translations($data)->sortKeys()->save('lang/id.json');
 Trans::make($data)->sortKeys()->save('lang/id.json');
 
 // Via locale helper (auto-loads and auto-saves - recommended)
-trans_locale('id')->syncWith('resources/views')->save();
+translations()->setLocale('id')->syncWith()->save();
 ```
 
 **Common usage examples:**
 
 ```php
-// 1. Sync translations with views (add missing + remove unused)
-trans_locale('id')
-    ->syncWith('resources/views')
+// 1. Sync translations (add missing + remove unused) - uses default views folder
+translations()->setLocale('id')
+    ->syncWith()
     ->save();
 
-// 2. Clean up and sort translations
-trans_locale('id')
-    ->clean()
+// 2. Sync with custom folder
+translations()->setLocale('id')
+    ->syncWith('app/Livewire')
     ->save();
 
-// 3. Remove duplicate keys from file
-trans_locale('id')
-    ->removeDuplicates()
-    ->save();
-
-// 4. Add missing keys only (without removing unused)
-$usedKeys = Trans::scanDirectory('resources/views');
-trans_locale('id')
-    ->addMissing($usedKeys)
+// 3. Sort keys only
+translations()->setLocale('id')
     ->sortKeys()
     ->save();
 
-// 5. Check translation progress
-$stats = trans_locale('id')->stats();
-// ['total' => 100, 'translated' => 85, 'untranslated' => 15, 'percentage' => 85.0]
+// 4. Remove duplicate keys
+translations()->setLocale('id')
+    ->removeDuplicates()
+    ->save();
 
-// 6. Export untranslated items for translator
-$json = trans_locale('id')
-    ->onlyUntranslated()
-    ->toJson();
+// 5. Add missing keys only (keep existing unused)
+translations()->setLocale('id')
+    ->scanAndAdd()
+    ->save();
+
+// 6. Remove unused keys only (keep missing)
+translations()->setLocale('id')
+    ->scanAndRemove()
+    ->save();
+
+// 7. Clean up (remove empty values + sort)
+translations()->setLocale('id')
+    ->clean()
+    ->save();
+
+// 8. Check translation progress
+$stats = translations()->setLocale('id')->stats();
+// ['total' => 100, 'translated' => 85, 'untranslated' => 15, 'percentage' => 85.0]
 ```
 
 **Available chainable methods:**
@@ -133,9 +141,10 @@ $json = trans_locale('id')
 | `clean()` | Remove empty + sort |
 | `addMissing($keys)` | Add missing keys |
 | `removeUnused($keys)` | Remove unused keys |
-| `syncWith($path)` | Scan + add missing + remove unused |
-| `forLocale($locale)` | Load from locale, enable auto-save |
-| `setLocale($locale)` | Chain from translations() helper |
+| `syncWith($path)` | Sync (add missing + remove unused) |
+| `scanAndAdd($path)` | Scan and add missing keys |
+| `scanAndRemove($path)` | Scan and remove unused keys |
+| `setLocale($locale)` | Load locale, enable auto-save |
 | `removeDuplicates()` | Re-read and remove duplicate keys |
 | `removeEmpty()` | Remove empty values |
 | `onlyTranslated()` | Keep only translated |
@@ -268,7 +277,6 @@ All Trans methods have global helper function wrappers:
 | `trans_unused($trans, $keys)` | Find unused keys |
 | `trans_has_unused($trans, $keys)` | Check if has unused keys |
 | `translations($arr)` | Create TransBuilder for chaining |
-| `trans_locale($locale)` | Load locale with auto-save |
 
 Example:
 ```php

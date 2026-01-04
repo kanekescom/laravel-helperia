@@ -54,30 +54,6 @@ class TransBuilder
     }
 
     /**
-     * Create a TransBuilder for a specific locale.
-     *
-     * Automatically loads existing translations from lang/{locale}.json
-     * and enables auto-save to the same file.
-     *
-     * @param  string  $locale  Locale code (e.g., 'id', 'en')
-     * @return static
-     *
-     * @example Trans::forLocale('id')->syncWith('resources/views')->save();
-     */
-    public static function forLocale(string $locale): static
-    {
-        $filePath = lang_path("{$locale}.json");
-        $translations = [];
-
-        if (file_exists($filePath)) {
-            $content = file_get_contents($filePath);
-            $translations = json_decode($content, true) ?? [];
-        }
-
-        return new static($translations, $locale);
-    }
-
-    /**
      * Set locale and load translations (instance method).
      *
      * Allows chaining from translations() helper: translations()->forLocale('id')
@@ -179,17 +155,51 @@ class TransBuilder
      * Sync translations with source files in a directory.
      *
      * Scans the directory, adds missing keys, and removes unused keys in one step.
+     * If no path provided, defaults to resource_path('views').
      *
-     * @param  string  $scanPath  Directory to scan (e.g., 'resources/views')
+     * @param  string|null  $scanPath  Directory to scan (default: 'resources/views')
      * @return $this
      */
-    public function syncWith(string $scanPath): static
+    public function syncWith(?string $scanPath = null): static
     {
-        $usedKeys = Trans::scanDirectory($scanPath);
+        $path = $scanPath ?? resource_path('views');
+        $usedKeys = Trans::scanDirectory($path);
 
         return $this
             ->addMissing($usedKeys)
             ->removeUnused($usedKeys);
+    }
+
+    /**
+     * Scan views and add missing translation keys.
+     *
+     * Shorthand for scanning and adding missing keys without removing unused.
+     *
+     * @param  string|null  $scanPath  Directory to scan (default: 'resources/views')
+     * @return $this
+     */
+    public function scanAndAdd(?string $scanPath = null): static
+    {
+        $path = $scanPath ?? resource_path('views');
+        $usedKeys = Trans::scanDirectory($path);
+
+        return $this->addMissing($usedKeys);
+    }
+
+    /**
+     * Scan views and remove unused translation keys.
+     *
+     * Shorthand for scanning and removing unused keys without adding missing.
+     *
+     * @param  string|null  $scanPath  Directory to scan (default: 'resources/views')
+     * @return $this
+     */
+    public function scanAndRemove(?string $scanPath = null): static
+    {
+        $path = $scanPath ?? resource_path('views');
+        $usedKeys = Trans::scanDirectory($path);
+
+        return $this->removeUnused($usedKeys);
     }
 
     /**

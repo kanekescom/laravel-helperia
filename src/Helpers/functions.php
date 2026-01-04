@@ -347,26 +347,3 @@ if (! function_exists('translations')) {
         return \Kanekescom\Helperia\Support\Trans::make($translations);
     }
 }
-
-if (! function_exists('trans_locale')) {
-
-    /**
-     * Create a TransBuilder for a specific locale with auto-load and auto-save.
-     *
-     * Automatically loads translations from lang/{locale}.json and enables
-     * saving without specifying the path.
-     *
-     * @param  string  $locale  Locale code (e.g., 'id', 'en')
-     * @return \Kanekescom\Helperia\Support\TransBuilder
-     *
-     * @example
-     * trans_locale('id')
-     *     ->syncWith('resources/views')
-     *     ->sortKeys()
-     *     ->save();
-     */
-    function trans_locale(string $locale): \Kanekescom\Helperia\Support\TransBuilder
-    {
-        return \Kanekescom\Helperia\Support\Trans::forLocale($locale);
-    }
-}
