@@ -24,13 +24,22 @@ class TransBuilder
     protected array $translations;
 
     /**
+     * The locale code for auto-save functionality.
+     *
+     * @var string|null
+     */
+    protected ?string $locale = null;
+
+    /**
      * Create a new TransBuilder instance.
      *
      * @param  array<string, string>  $translations
+     * @param  string|null  $locale
      */
-    public function __construct(array $translations = [])
+    public function __construct(array $translations = [], ?string $locale = null)
     {
         $this->translations = $translations;
+        $this->locale = $locale;
     }
 
     /**
@@ -42,6 +51,73 @@ class TransBuilder
     public static function make(array $translations = []): static
     {
         return new static($translations);
+    }
+
+    /**
+     * Create a TransBuilder for a specific locale.
+     *
+     * Automatically loads existing translations from lang/{locale}.json
+     * and enables auto-save to the same file.
+     *
+     * @param  string  $locale  Locale code (e.g., 'id', 'en')
+     * @return static
+     *
+     * @example Trans::forLocale('id')->syncWith('resources/views')->save();
+     */
+    public static function forLocale(string $locale): static
+    {
+        $filePath = lang_path("{$locale}.json");
+        $translations = [];
+
+        if (file_exists($filePath)) {
+            $content = file_get_contents($filePath);
+            $translations = json_decode($content, true) ?? [];
+        }
+
+        return new static($translations, $locale);
+    }
+
+    /**
+     * Set locale and load translations (instance method).
+     *
+     * Allows chaining from translations() helper: translations()->forLocale('id')
+     *
+     * @param  string  $locale  Locale code (e.g., 'id', 'en')
+     * @return $this
+     */
+    public function setLocale(string $locale): static
+    {
+        $filePath = lang_path("{$locale}.json");
+        $this->locale = $locale;
+
+        if (file_exists($filePath)) {
+            $content = file_get_contents($filePath);
+            $this->translations = json_decode($content, true) ?? [];
+        }
+
+        return $this;
+    }
+
+    /**
+     * Re-read file and remove duplicate keys.
+     *
+     * Only works when locale is set via forLocale().
+     * Keeps the last occurrence of duplicate keys.
+     *
+     * @return $this
+     */
+    public function removeDuplicates(): static
+    {
+        if ($this->locale !== null) {
+            $filePath = lang_path("{$this->locale}.json");
+
+            if (file_exists($filePath)) {
+                $content = file_get_contents($filePath);
+                $this->translations = Trans::removeDuplicates($content);
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -97,6 +173,23 @@ class TransBuilder
         $this->translations = Trans::removeUnused($this->translations, $usedKeys);
 
         return $this;
+    }
+
+    /**
+     * Sync translations with source files in a directory.
+     *
+     * Scans the directory, adds missing keys, and removes unused keys in one step.
+     *
+     * @param  string  $scanPath  Directory to scan (e.g., 'resources/views')
+     * @return $this
+     */
+    public function syncWith(string $scanPath): static
+    {
+        $usedKeys = Trans::scanDirectory($scanPath);
+
+        return $this
+            ->addMissing($usedKeys)
+            ->removeUnused($usedKeys);
     }
 
     /**
@@ -180,12 +273,23 @@ class TransBuilder
     /**
      * Save translation array to JSON file.
      *
-     * @param  string  $filePath  Path to save JSON file
+     * If no path is provided and locale is set, saves to lang/{locale}.json
+     *
+     * @param  string|null  $filePath  Path to save JSON file (optional if locale is set)
      * @param  bool  $sort  Whether to sort keys before saving
      * @return bool  True if saved successfully
+     *
+     * @throws \InvalidArgumentException  If no path provided and locale is not set
      */
-    public function save(string $filePath, bool $sort = true): bool
+    public function save(?string $filePath = null, bool $sort = true): bool
     {
+        if ($filePath === null) {
+            if ($this->locale === null) {
+                throw new \InvalidArgumentException('No file path provided. Either pass a path or use forLocale().');
+            }
+            $filePath = lang_path("{$this->locale}.json");
+        }
+
         return Trans::save($filePath, $this->translations, $sort);
     }
 

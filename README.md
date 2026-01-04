@@ -85,30 +85,42 @@ translations($data)->sortKeys()->save('lang/id.json');
 
 // Via Trans static method
 Trans::make($data)->sortKeys()->save('lang/id.json');
+
+// Via locale helper (auto-loads and auto-saves - recommended)
+trans_locale('id')->syncWith('resources/views')->save();
 ```
 
-**Usage examples:**
+**Common usage examples:**
 
 ```php
-// Sync translations with views: add missing + remove unused
-$usedKeys = Trans::scanDirectory('resources/views');
-translations($data)
-    ->addMissing($usedKeys)
-    ->removeUnused($usedKeys)
-    ->sortKeys()
-    ->save('lang/id.json');
+// 1. Sync translations with views (add missing + remove unused)
+trans_locale('id')
+    ->syncWith('resources/views')
+    ->save();
 
-// Quick cleanup: remove empty values and sort
-translations($data)
+// 2. Clean up and sort translations
+trans_locale('id')
     ->clean()
-    ->save('lang/id.json');
+    ->save();
 
-// Check translation progress
-$stats = translations($data)->stats();
+// 3. Remove duplicate keys from file
+trans_locale('id')
+    ->removeDuplicates()
+    ->save();
+
+// 4. Add missing keys only (without removing unused)
+$usedKeys = Trans::scanDirectory('resources/views');
+trans_locale('id')
+    ->addMissing($usedKeys)
+    ->sortKeys()
+    ->save();
+
+// 5. Check translation progress
+$stats = trans_locale('id')->stats();
 // ['total' => 100, 'translated' => 85, 'untranslated' => 15, 'percentage' => 85.0]
 
-// Export untranslated items as JSON for translator
-$json = translations($data)
+// 6. Export untranslated items for translator
+$json = trans_locale('id')
     ->onlyUntranslated()
     ->toJson();
 ```
@@ -121,6 +133,10 @@ $json = translations($data)
 | `clean()` | Remove empty + sort |
 | `addMissing($keys)` | Add missing keys |
 | `removeUnused($keys)` | Remove unused keys |
+| `syncWith($path)` | Scan + add missing + remove unused |
+| `forLocale($locale)` | Load from locale, enable auto-save |
+| `setLocale($locale)` | Chain from translations() helper |
+| `removeDuplicates()` | Re-read and remove duplicate keys |
 | `removeEmpty()` | Remove empty values |
 | `onlyTranslated()` | Keep only translated |
 | `onlyUntranslated()` | Keep only untranslated |
@@ -252,6 +268,7 @@ All Trans methods have global helper function wrappers:
 | `trans_unused($trans, $keys)` | Find unused keys |
 | `trans_has_unused($trans, $keys)` | Check if has unused keys |
 | `translations($arr)` | Create TransBuilder for chaining |
+| `trans_locale($locale)` | Load locale with auto-save |
 
 Example:
 ```php

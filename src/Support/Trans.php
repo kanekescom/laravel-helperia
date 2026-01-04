@@ -28,6 +28,21 @@ class Trans
     }
 
     /**
+     * Create a TransBuilder for a specific locale.
+     *
+     * Automatically loads existing translations and enables auto-save.
+     *
+     * @param  string  $locale  Locale code (e.g., 'id', 'en')
+     * @return TransBuilder
+     *
+     * @example Trans::forLocale('id')->syncWith('resources/views')->save();
+     */
+    public static function forLocale(string $locale): TransBuilder
+    {
+        return TransBuilder::forLocale($locale);
+    }
+
+    /**
      * Find duplicate keys in raw JSON content.
      *
      * Since PHP arrays cannot have duplicate keys, this function
