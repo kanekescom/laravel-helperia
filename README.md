@@ -75,23 +75,23 @@ use Kanekescom\Helperia\Support\Trans;
 
 ##### Fluent Builder API (Method Chaining)
 
-Use `Trans::make()` for fluent, chainable operations:
+Use `translations()` helper (similar to Laravel's `collect()`) for fluent operations:
 
 ```php
 // Clean up and save translations in one chain
-Trans::make($translations)
+translations($data)
     ->addMissing($keysFromViews)
     ->removeEmpty()
     ->sortKeys()
     ->save('lang/id.json');
 
 // Get cleaned array
-$cleaned = Trans::make($translations)
+$cleaned = translations($data)
     ->clean()
     ->get();
 
 // Filter and export
-$json = Trans::make($translations)
+$json = translations($data)
     ->onlyUntranslated()
     ->toJson();
 ```
@@ -222,7 +222,7 @@ All Trans methods have global helper function wrappers:
 | `trans_extract_keys($content)` | Extract keys from file content |
 | `trans_missing($trans, $keys)` | Find missing keys |
 | `trans_has_missing($trans, $keys)` | Check if has missing keys |
-| `trans_make($arr)` | Create TransBuilder for chaining |
+| `translations($arr)` | Create TransBuilder for chaining |
 
 Example:
 ```php

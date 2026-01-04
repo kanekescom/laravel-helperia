@@ -295,20 +295,23 @@ if (! function_exists('trans_has_missing')) {
     }
 }
 
-if (! function_exists('trans_make')) {
+if (! function_exists('translations')) {
     /**
      * Create a new TransBuilder instance for fluent operations.
+     *
+     * Similar to Laravel's collect() helper, this provides a fluent
+     * interface for working with translation arrays.
      *
      * @param  array<string, string>  $translations
      * @return \Kanekescom\Helperia\Support\TransBuilder
      *
      * @example
-     * trans_make($translations)
+     * translations($data)
      *     ->addMissing($keys)
      *     ->sortKeys()
      *     ->save('lang/id.json');
      */
-    function trans_make(array $translations = []): \Kanekescom\Helperia\Support\TransBuilder
+    function translations(array $translations = []): \Kanekescom\Helperia\Support\TransBuilder
     {
         return \Kanekescom\Helperia\Support\Trans::make($translations);
     }

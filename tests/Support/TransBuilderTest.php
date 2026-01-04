@@ -12,7 +12,7 @@ it('can create TransBuilder from Trans::make', function () {
 });
 
 it('can create TransBuilder from helper function', function () {
-    $builder = trans_make(['Hello' => 'Halo']);
+    $builder = translations(['Hello' => 'Halo']);
 
     expect($builder)->toBeInstanceOf(TransBuilder::class);
 });
