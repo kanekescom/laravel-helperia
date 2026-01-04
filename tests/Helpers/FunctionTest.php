@@ -183,3 +183,21 @@ it('can check if has missing keys', function () {
     $allPresent = ['Hello'];
     expect(trans_has_missing($translations, $allPresent))->toBeFalse();
 });
+
+it('can find unused translation keys', function () {
+    $translations = ['Hello' => 'Halo', 'World' => 'Dunia', 'Goodbye' => 'Selamat tinggal'];
+    $usedKeys = ['Hello', 'World'];
+
+    $unused = trans_unused($translations, $usedKeys);
+
+    expect($unused)->toContain('Goodbye');
+    expect($unused)->not->toContain('Hello');
+    expect($unused)->not->toContain('World');
+});
+
+it('can check if has unused keys', function () {
+    $translations = ['Hello' => 'Halo', 'World' => 'Dunia'];
+
+    expect(trans_has_unused($translations, ['Hello']))->toBeTrue();
+    expect(trans_has_unused($translations, ['Hello', 'World']))->toBeFalse();
+});

@@ -341,4 +341,54 @@ class Trans
 
         return $translations;
     }
+
+    /**
+     * Find unused translation keys.
+     *
+     * Returns keys that exist in translations but are not found in source files.
+     *
+     * @param  array<string, string>  $translations  Existing translations
+     * @param  array<string>  $usedKeys  Keys found in source files
+     * @return array<string>  Array of unused keys
+     */
+    public static function unused(array $translations, array $usedKeys): array
+    {
+        $translationKeys = array_keys($translations);
+        $usedKeysFlipped = array_flip($usedKeys);
+
+        return array_values(array_filter(
+            $translationKeys,
+            fn($key) => ! isset($usedKeysFlipped[$key])
+        ));
+    }
+
+    /**
+     * Check if there are unused translation keys.
+     *
+     * @param  array<string, string>  $translations  Existing translations
+     * @param  array<string>  $usedKeys  Keys found in source files
+     * @return bool
+     */
+    public static function hasUnused(array $translations, array $usedKeys): bool
+    {
+        return count(static::unused($translations, $usedKeys)) > 0;
+    }
+
+    /**
+     * Remove unused keys from translation array.
+     *
+     * @param  array<string, string>  $translations  Existing translations
+     * @param  array<string>  $usedKeys  Keys found in source files
+     * @return array<string, string>  Cleaned translations array
+     */
+    public static function removeUnused(array $translations, array $usedKeys): array
+    {
+        $usedKeysFlipped = array_flip($usedKeys);
+
+        return array_filter(
+            $translations,
+            fn($value, $key) => isset($usedKeysFlipped[$key]),
+            ARRAY_FILTER_USE_BOTH
+        );
+    }
 }

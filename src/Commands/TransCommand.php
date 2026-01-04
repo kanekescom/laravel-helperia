@@ -22,7 +22,8 @@ class TransCommand extends Command
                         {--remove-duplicates : Remove duplicate keys from raw JSON and save}
                         {--stats : Show translation statistics}
                         {--scan= : Scan directory for missing translation keys (e.g., resources/views)}
-                        {--add-missing : Add missing keys found from --scan to translation file}';
+                        {--add-missing : Add missing keys found from --scan to translation file}
+                        {--remove-unused : Remove unused keys (not found in --scan directory) from translation file}';
 
     /**
      * The console command description.
@@ -288,43 +289,75 @@ class TransCommand extends Command
         // Scan for translation keys
         $foundKeys = Trans::scanDirectory($scanPath);
         $missing = Trans::missing($translations, $foundKeys);
+        $unused = Trans::unused($translations, $foundKeys);
 
         $this->components->twoColumnDetail('Keys found in source', (string) count($foundKeys));
         $this->components->twoColumnDetail('Keys in translation file', (string) count($translations));
         $this->components->twoColumnDetail('Missing keys', "<fg=yellow>" . count($missing) . "</>");
+        $this->components->twoColumnDetail('Unused keys', "<fg=cyan>" . count($unused) . "</>");
         $this->newLine();
 
-        if (empty($missing)) {
-            $this->components->info('✓ All translation keys are present');
+        if (empty($missing) && empty($unused)) {
+            $this->components->info('✓ All translation keys are in sync');
             $this->newLine();
 
             return $translations;
         }
 
         // Show missing keys
-        $this->components->warn('⚠ Missing translation keys:');
-        $shown = array_slice($missing, 0, 15);
-        foreach ($shown as $key) {
-            $shortKey = strlen($key) > 60 ? substr($key, 0, 60) . '...' : $key;
-            $this->line("  <fg=yellow>•</> {$shortKey}");
+        if (! empty($missing)) {
+            $this->components->warn('⚠ Missing translation keys:');
+            $shown = array_slice($missing, 0, 15);
+            foreach ($shown as $key) {
+                $shortKey = strlen($key) > 60 ? substr($key, 0, 60) . '...' : $key;
+                $this->line("  <fg=yellow>•</> {$shortKey}");
+            }
+
+            if (count($missing) > 15) {
+                $remaining = count($missing) - 15;
+                $this->line("  <fg=gray>... and {$remaining} more</>");
+            }
+            $this->newLine();
+
+            // Add missing keys if requested
+            if ($this->option('add-missing')) {
+                $translations = Trans::addMissing($translations, $foundKeys);
+                Trans::save($file, $translations, true);
+
+                $this->components->info("✓ Added " . count($missing) . " missing key(s) to translation file");
+                $this->newLine();
+            } else {
+                $this->line('<fg=gray>Tip: Use --add-missing to add missing keys</>');
+                $this->newLine();
+            }
         }
 
-        if (count($missing) > 15) {
-            $remaining = count($missing) - 15;
-            $this->line("  <fg=gray>... and {$remaining} more</>");
-        }
-        $this->newLine();
+        // Show unused keys
+        if (! empty($unused)) {
+            $this->components->warn('⚠ Unused translation keys (not in source):');
+            $shown = array_slice($unused, 0, 15);
+            foreach ($shown as $key) {
+                $shortKey = strlen($key) > 60 ? substr($key, 0, 60) . '...' : $key;
+                $this->line("  <fg=cyan>•</> {$shortKey}");
+            }
 
-        // Add missing keys if requested
-        if ($this->option('add-missing')) {
-            $translations = Trans::addMissing($translations, $foundKeys);
-            Trans::save($file, $translations, true);
+            if (count($unused) > 15) {
+                $remaining = count($unused) - 15;
+                $this->line("  <fg=gray>... and {$remaining} more</>");
+            }
+            $this->newLine();
 
-            $this->components->info("✓ Added " . count($missing) . " missing key(s) to translation file");
-            $this->newLine();
-        } else {
-            $this->line('<fg=gray>Tip: Use --add-missing to add these keys to the translation file</>');
-            $this->newLine();
+            // Remove unused keys if requested
+            if ($this->option('remove-unused')) {
+                $translations = Trans::removeUnused($translations, $foundKeys);
+                Trans::save($file, $translations, true);
+
+                $this->components->info("✓ Removed " . count($unused) . " unused key(s) from translation file");
+                $this->newLine();
+            } else {
+                $this->line('<fg=gray>Tip: Use --remove-unused to remove unused keys</>');
+                $this->newLine();
+            }
         }
 
         return $translations;

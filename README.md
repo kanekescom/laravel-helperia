@@ -203,6 +203,15 @@ Trans::hasMissing($translations, $foundKeys); // true or false
 
 // Add missing keys to translations (key = value, untranslated)
 $updated = Trans::addMissing($translations, $foundKeys);
+
+// Find keys in translations that are not used in source files
+$unused = Trans::unused($translations, $foundKeys);
+
+// Check if there are unused keys
+Trans::hasUnused($translations, $foundKeys); // true or false
+
+// Remove unused keys from translations
+$cleaned = Trans::removeUnused($translations, $foundKeys);
 ```
 
 #### Helper Functions
@@ -222,6 +231,8 @@ All Trans methods have global helper function wrappers:
 | `trans_extract_keys($content)` | Extract keys from file content |
 | `trans_missing($trans, $keys)` | Find missing keys |
 | `trans_has_missing($trans, $keys)` | Check if has missing keys |
+| `trans_unused($trans, $keys)` | Find unused keys |
+| `trans_has_unused($trans, $keys)` | Check if has unused keys |
 | `translations($arr)` | Create TransBuilder for chaining |
 
 Example:
@@ -263,6 +274,9 @@ php artisan helperia:trans id --scan=resources/views
 
 # Scan and automatically add missing keys to translation file
 php artisan helperia:trans id --scan=resources/views --add-missing
+
+# Scan and remove unused keys (keys not found in source files)
+php artisan helperia:trans id --scan=resources/views --remove-unused
 
 # Use full path if needed
 php artisan helperia:trans lang/id.json --check

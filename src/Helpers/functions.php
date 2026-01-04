@@ -295,7 +295,38 @@ if (! function_exists('trans_has_missing')) {
     }
 }
 
+if (! function_exists('trans_unused')) {
+    /**
+     * Find unused translation keys.
+     *
+     * Returns keys that exist in translations but are not found in source files.
+     *
+     * @param  array<string, string>  $translations  Existing translations
+     * @param  array<string>  $usedKeys  Keys found in source files
+     * @return array<string>  Array of unused keys
+     */
+    function trans_unused(array $translations, array $usedKeys): array
+    {
+        return \Kanekescom\Helperia\Support\Trans::unused($translations, $usedKeys);
+    }
+}
+
+if (! function_exists('trans_has_unused')) {
+    /**
+     * Check if there are unused translation keys.
+     *
+     * @param  array<string, string>  $translations  Existing translations
+     * @param  array<string>  $usedKeys  Keys found in source files
+     * @return bool
+     */
+    function trans_has_unused(array $translations, array $usedKeys): bool
+    {
+        return \Kanekescom\Helperia\Support\Trans::hasUnused($translations, $usedKeys);
+    }
+}
+
 if (! function_exists('translations')) {
+
     /**
      * Create a new TransBuilder instance for fluent operations.
      *

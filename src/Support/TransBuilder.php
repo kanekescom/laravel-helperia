@@ -85,6 +85,21 @@ class TransBuilder
     }
 
     /**
+     * Remove unused keys from translation array.
+     *
+     * Removes keys that are not found in the provided used keys list.
+     *
+     * @param  array<string>  $usedKeys  Keys found in source files
+     * @return $this
+     */
+    public function removeUnused(array $usedKeys): static
+    {
+        $this->translations = Trans::removeUnused($this->translations, $usedKeys);
+
+        return $this;
+    }
+
+    /**
      * Remove empty values from translation array.
      *
      * @return $this

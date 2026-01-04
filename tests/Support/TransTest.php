@@ -134,3 +134,31 @@ it('can add missing keys', function () {
     expect($updated)->toHaveKey('World');
     expect($updated['World'])->toBe('World'); // Key = Value (untranslated)
 });
+
+// Unused keys tests
+it('can find unused keys', function () {
+    $trans = ['Hello' => 'Halo', 'World' => 'Dunia', 'Goodbye' => 'Selamat tinggal'];
+    $usedKeys = ['Hello', 'World'];
+    $unused = Trans::unused($trans, $usedKeys);
+
+    expect($unused)->toContain('Goodbye');
+    expect($unused)->not->toContain('Hello');
+    expect($unused)->not->toContain('World');
+});
+
+it('can check if has unused keys', function () {
+    $trans = ['Hello' => 'Halo', 'World' => 'Dunia'];
+
+    expect(Trans::hasUnused($trans, ['Hello']))->toBeTrue();
+    expect(Trans::hasUnused($trans, ['Hello', 'World']))->toBeFalse();
+});
+
+it('can remove unused keys', function () {
+    $trans = ['Hello' => 'Halo', 'World' => 'Dunia', 'Goodbye' => 'Selamat tinggal'];
+    $usedKeys = ['Hello', 'World'];
+    $cleaned = Trans::removeUnused($trans, $usedKeys);
+
+    expect($cleaned)->toHaveKey('Hello');
+    expect($cleaned)->toHaveKey('World');
+    expect($cleaned)->not->toHaveKey('Goodbye');
+});

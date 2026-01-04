@@ -134,3 +134,13 @@ it('can use toArray alias', function () {
 
     expect($result)->toBe(['A' => 'A']);
 });
+
+it('can chain removeUnused operation', function () {
+    $result = Trans::make(['Hello' => 'Halo', 'World' => 'Dunia', 'Goodbye' => 'Selamat tinggal'])
+        ->removeUnused(['Hello', 'World'])
+        ->get();
+
+    expect($result)->toHaveKey('Hello');
+    expect($result)->toHaveKey('World');
+    expect($result)->not->toHaveKey('Goodbye');
+});
