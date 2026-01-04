@@ -90,19 +90,24 @@ Trans::make($data)->sortKeys()->save('lang/id.json');
 **Usage examples:**
 
 ```php
-// Clean up and save translations in one chain
+// Sync translations with views: add missing + remove unused
+$usedKeys = Trans::scanDirectory('resources/views');
 translations($data)
-    ->addMissing($keysFromViews)
-    ->removeEmpty()
+    ->addMissing($usedKeys)
+    ->removeUnused($usedKeys)
     ->sortKeys()
     ->save('lang/id.json');
 
-// Get cleaned array
-$cleaned = translations($data)
+// Quick cleanup: remove empty values and sort
+translations($data)
     ->clean()
-    ->get();
+    ->save('lang/id.json');
 
-// Filter and export
+// Check translation progress
+$stats = translations($data)->stats();
+// ['total' => 100, 'translated' => 85, 'untranslated' => 15, 'percentage' => 85.0]
+
+// Export untranslated items as JSON for translator
 $json = translations($data)
     ->onlyUntranslated()
     ->toJson();
