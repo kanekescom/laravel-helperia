@@ -196,4 +196,132 @@ class Trans
 
         return json_encode($translations, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
+
+    /**
+     * Scan directory for translation keys used in files.
+     *
+     * Searches for patterns like __('text'), __("text"), @lang('text'), trans('text')
+     *
+     * @param  string  $directory  Directory to scan
+     * @param  array<string>  $extensions  File extensions to scan (default: ['php', 'blade.php'])
+     * @return array<string>  Array of unique translation keys found
+     */
+    public static function scanDirectory(string $directory, array $extensions = ['php']): array
+    {
+        if (! is_dir($directory)) {
+            return [];
+        }
+
+        $keys = [];
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($directory, \RecursiveDirectoryIterator::SKIP_DOTS)
+        );
+
+        foreach ($iterator as $file) {
+            if (! $file->isFile()) {
+                continue;
+            }
+
+            $filename = $file->getFilename();
+            $matchesExtension = false;
+
+            foreach ($extensions as $ext) {
+                if (str_ends_with($filename, '.' . $ext)) {
+                    $matchesExtension = true;
+                    break;
+                }
+            }
+
+            if (! $matchesExtension) {
+                continue;
+            }
+
+            $content = file_get_contents($file->getPathname());
+            $fileKeys = static::extractKeys($content);
+            $keys = array_merge($keys, $fileKeys);
+        }
+
+        return array_unique($keys);
+    }
+
+    /**
+     * Extract translation keys from file content.
+     *
+     * Matches patterns:
+     * - __('text') or __("text")
+     * - @lang('text') or @lang("text")
+     * - trans('text') or trans("text")
+     * - Lang::get('text') or Lang::get("text")
+     *
+     * @param  string  $content  File content
+     * @return array<string>  Array of translation keys found
+     */
+    public static function extractKeys(string $content): array
+    {
+        $keys = [];
+
+        // Patterns to match translation functions
+        $patterns = [
+            // __('text') or __("text")
+            '/__\(\s*[\'"]([^\'"]+)[\'"]\s*(?:,|\))/',
+            // @lang('text') or @lang("text")
+            '/@lang\(\s*[\'"]([^\'"]+)[\'"]\s*\)/',
+            // trans('text') or trans("text")
+            '/\btrans\(\s*[\'"]([^\'"]+)[\'"]\s*(?:,|\))/',
+            // Lang::get('text') or Lang::get("text")
+            '/Lang::get\(\s*[\'"]([^\'"]+)[\'"]\s*(?:,|\))/',
+        ];
+
+        foreach ($patterns as $pattern) {
+            if (preg_match_all($pattern, $content, $matches)) {
+                $keys = array_merge($keys, $matches[1]);
+            }
+        }
+
+        return $keys;
+    }
+
+    /**
+     * Find translation keys that are missing from the translation array.
+     *
+     * @param  array<string, string>  $translations  Existing translations
+     * @param  array<string>  $keys  Keys found in source files
+     * @return array<string>  Array of missing keys
+     */
+    public static function missing(array $translations, array $keys): array
+    {
+        return array_values(array_filter($keys, fn($key) => ! array_key_exists($key, $translations)));
+    }
+
+    /**
+     * Check if there are missing translation keys.
+     *
+     * @param  array<string, string>  $translations  Existing translations
+     * @param  array<string>  $keys  Keys found in source files
+     * @return bool
+     */
+    public static function hasMissing(array $translations, array $keys): bool
+    {
+        return count(static::missing($translations, $keys)) > 0;
+    }
+
+    /**
+     * Add missing keys to translation array.
+     *
+     * Missing keys are added with the key as the value (untranslated).
+     *
+     * @param  array<string, string>  $translations  Existing translations
+     * @param  array<string>  $keys  Keys to add if missing
+     * @return array<string, string>  Updated translations array
+     */
+    public static function addMissing(array $translations, array $keys): array
+    {
+        $missing = static::missing($translations, $keys);
+
+        foreach ($missing as $key) {
+            $translations[$key] = $key; // Add with key as value (untranslated)
+        }
+
+        return $translations;
+    }
 }

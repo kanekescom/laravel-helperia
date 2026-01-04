@@ -142,6 +142,27 @@ Trans::toJson($translations);
 Trans::toJson($translations, false); // Don't sort
 ```
 
+##### Scanning for Missing Keys
+
+```php
+// Scan directory for translation keys used in source files
+$foundKeys = Trans::scanDirectory(resource_path('views'));
+
+// Extract keys from file content directly
+$content = file_get_contents('resources/views/home.blade.php');
+$keys = Trans::extractKeys($content);
+// Finds: __('text'), @lang('text'), trans('text'), Lang::get('text')
+
+// Find keys that are in source files but not in translations
+$missing = Trans::missing($translations, $foundKeys);
+
+// Check if there are missing keys
+Trans::hasMissing($translations, $foundKeys); // true or false
+
+// Add missing keys to translations (key = value, untranslated)
+$updated = Trans::addMissing($translations, $foundKeys);
+```
+
 #### Helper Functions
 
 All Trans methods have global helper function wrappers:
@@ -156,6 +177,9 @@ All Trans methods have global helper function wrappers:
 | `trans_translated($arr)` | Find translated items |
 | `trans_stats($arr)` | Get translation statistics |
 | `trans_clean($arr)` | Remove empty + sort keys |
+| `trans_extract_keys($content)` | Extract keys from file content |
+| `trans_missing($trans, $keys)` | Find missing keys |
+| `trans_has_missing($trans, $keys)` | Check if has missing keys |
 
 Example:
 ```php
@@ -190,6 +214,12 @@ php artisan helperia:trans id --stats
 
 # Combine options
 php artisan helperia:trans id --check --remove-duplicates --sort
+
+# Scan source files for missing translation keys
+php artisan helperia:trans id --scan=resources/views
+
+# Scan and automatically add missing keys to translation file
+php artisan helperia:trans id --scan=resources/views --add-missing
 
 # Use full path if needed
 php artisan helperia:trans lang/id.json --check

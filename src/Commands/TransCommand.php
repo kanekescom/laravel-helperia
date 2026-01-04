@@ -20,7 +20,9 @@ class TransCommand extends Command
                         {--check : Check for issues (duplicates, untranslated)}
                         {--sort : Sort keys alphabetically and save}
                         {--remove-duplicates : Remove duplicate keys from raw JSON and save}
-                        {--stats : Show translation statistics}';
+                        {--stats : Show translation statistics}
+                        {--scan= : Scan directory for missing translation keys (e.g., resources/views)}
+                        {--add-missing : Add missing keys found from --scan to translation file}';
 
     /**
      * The console command description.
@@ -82,10 +84,20 @@ class TransCommand extends Command
             $this->sortAndSave($file, $translations);
         }
 
+        // Scan for missing keys
+        if ($this->option('scan')) {
+            // Reload file if changes were made
+            if ($this->option('remove-duplicates') || $this->option('sort')) {
+                $jsonContent = file_get_contents($file);
+                $translations = json_decode($jsonContent, true);
+            }
+            $translations = $this->scanAndReport($file, $translations);
+        }
+
         // Show detailed stats
         if ($this->option('stats')) {
             // Reload file if changes were made
-            if ($this->option('remove-duplicates') || $this->option('sort')) {
+            if ($this->option('remove-duplicates') || $this->option('sort') || $this->option('add-missing')) {
                 $jsonContent = file_get_contents($file);
                 $translations = json_decode($jsonContent, true);
             }
@@ -249,5 +261,72 @@ class TransCommand extends Command
             }
             $this->newLine();
         }
+    }
+
+    /**
+     * Scan directory for missing translation keys and optionally add them.
+     */
+    protected function scanAndReport(string $file, array $translations): array
+    {
+        $scanPath = $this->option('scan');
+
+        // Resolve relative paths
+        if (! str_starts_with($scanPath, '/') && ! preg_match('/^[A-Z]:/i', $scanPath)) {
+            $scanPath = base_path($scanPath);
+        }
+
+        if (! is_dir($scanPath)) {
+            $this->components->error("Directory not found: {$scanPath}");
+            $this->newLine();
+
+            return $translations;
+        }
+
+        $this->components->info("Scanning: {$scanPath}");
+        $this->newLine();
+
+        // Scan for translation keys
+        $foundKeys = Trans::scanDirectory($scanPath);
+        $missing = Trans::missing($translations, $foundKeys);
+
+        $this->components->twoColumnDetail('Keys found in source', (string) count($foundKeys));
+        $this->components->twoColumnDetail('Keys in translation file', (string) count($translations));
+        $this->components->twoColumnDetail('Missing keys', "<fg=yellow>" . count($missing) . "</>");
+        $this->newLine();
+
+        if (empty($missing)) {
+            $this->components->info('✓ All translation keys are present');
+            $this->newLine();
+
+            return $translations;
+        }
+
+        // Show missing keys
+        $this->components->warn('⚠ Missing translation keys:');
+        $shown = array_slice($missing, 0, 15);
+        foreach ($shown as $key) {
+            $shortKey = strlen($key) > 60 ? substr($key, 0, 60) . '...' : $key;
+            $this->line("  <fg=yellow>•</> {$shortKey}");
+        }
+
+        if (count($missing) > 15) {
+            $remaining = count($missing) - 15;
+            $this->line("  <fg=gray>... and {$remaining} more</>");
+        }
+        $this->newLine();
+
+        // Add missing keys if requested
+        if ($this->option('add-missing')) {
+            $translations = Trans::addMissing($translations, $foundKeys);
+            Trans::save($file, $translations, true);
+
+            $this->components->info("✓ Added " . count($missing) . " missing key(s) to translation file");
+            $this->newLine();
+        } else {
+            $this->line('<fg=gray>Tip: Use --add-missing to add these keys to the translation file</>');
+            $this->newLine();
+        }
+
+        return $translations;
     }
 }

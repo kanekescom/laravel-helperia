@@ -251,3 +251,46 @@ if (! function_exists('trans_clean')) {
         return \Kanekescom\Helperia\Support\Trans::clean($translations);
     }
 }
+
+if (! function_exists('trans_extract_keys')) {
+    /**
+     * Extract translation keys from file content.
+     *
+     * Matches patterns like __('text'), @lang('text'), trans('text')
+     *
+     * @param  string  $content  File content
+     * @return array<string>  Array of translation keys found
+     */
+    function trans_extract_keys(string $content): array
+    {
+        return \Kanekescom\Helperia\Support\Trans::extractKeys($content);
+    }
+}
+
+if (! function_exists('trans_missing')) {
+    /**
+     * Find translation keys that are missing from the translation array.
+     *
+     * @param  array<string, string>  $translations  Existing translations
+     * @param  array<string>  $keys  Keys found in source files
+     * @return array<string>  Array of missing keys
+     */
+    function trans_missing(array $translations, array $keys): array
+    {
+        return \Kanekescom\Helperia\Support\Trans::missing($translations, $keys);
+    }
+}
+
+if (! function_exists('trans_has_missing')) {
+    /**
+     * Check if there are missing translation keys.
+     *
+     * @param  array<string, string>  $translations  Existing translations
+     * @param  array<string>  $keys  Keys found in source files
+     * @return bool
+     */
+    function trans_has_missing(array $translations, array $keys): bool
+    {
+        return \Kanekescom\Helperia\Support\Trans::hasMissing($translations, $keys);
+    }
+}

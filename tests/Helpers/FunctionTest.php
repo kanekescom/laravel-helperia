@@ -145,3 +145,41 @@ it('can clean translation array', function () {
     expect($cleaned)->not->toHaveKey('Apple');
     expect($cleaned)->not->toHaveKey('Banana');
 });
+
+it('can extract translation keys from content', function () {
+    $content = '
+        <?php echo __("Hello World"); ?>
+        {{ __("Welcome") }}
+        @lang("Greeting")
+        trans("Message")
+        Lang::get("Title")
+    ';
+    $keys = trans_extract_keys($content);
+
+    expect($keys)->toContain('Hello World');
+    expect($keys)->toContain('Welcome');
+    expect($keys)->toContain('Greeting');
+    expect($keys)->toContain('Message');
+    expect($keys)->toContain('Title');
+});
+
+it('can find missing translation keys', function () {
+    $translations = ['Hello' => 'Halo', 'World' => 'Dunia'];
+    $foundKeys = ['Hello', 'World', 'Yes', 'No'];
+
+    $missing = trans_missing($translations, $foundKeys);
+
+    expect($missing)->toContain('Yes');
+    expect($missing)->toContain('No');
+    expect($missing)->not->toContain('Hello');
+});
+
+it('can check if has missing keys', function () {
+    $translations = ['Hello' => 'Halo'];
+    $foundKeys = ['Hello', 'World'];
+
+    expect(trans_has_missing($translations, $foundKeys))->toBeTrue();
+
+    $allPresent = ['Hello'];
+    expect(trans_has_missing($translations, $allPresent))->toBeFalse();
+});
