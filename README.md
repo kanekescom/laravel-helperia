@@ -86,77 +86,111 @@ translations($data)->sortKeys()->save('lang/id.json');
 // Via Trans static method
 Trans::make($data)->sortKeys()->save('lang/id.json');
 
-// Via locale helper (auto-loads and auto-saves - recommended)
+// Via translations() helper (recommended)
 translations()->setLocale('id')->syncWith()->save();
 ```
 
-**Common usage examples:**
+**Feature Examples:**
 
 ```php
-// 1. Sync translations (add missing + remove unused) - uses default views folder
+// === LOCALE-BASED OPERATIONS ===
+// Load from lang/id.json, auto-save to same file
 translations()->setLocale('id')
     ->syncWith()
     ->save();
 
-// 2. Sync with custom folder
-translations()->setLocale('id')
-    ->syncWith('app/Livewire')
-    ->save();
+// === SYNC TRANSLATIONS ===
+// Sync with default views folder (add missing + remove unused)
+translations()->setLocale('id')->syncWith()->save();
 
-// 3. Sort keys only
-translations()->setLocale('id')
-    ->sortKeys()
-    ->save();
+// Sync with custom folder
+translations()->setLocale('id')->syncWith('app/Livewire')->save();
 
-// 4. Remove duplicate keys
-translations()->setLocale('id')
-    ->removeDuplicates()
-    ->save();
+// Add missing keys only (keep unused)
+translations()->setLocale('id')->scanAndAdd()->save();
 
-// 5. Add missing keys only (keep existing unused)
-translations()->setLocale('id')
-    ->scanAndAdd()
-    ->save();
+// Remove unused keys only (keep missing)
+translations()->setLocale('id')->scanAndRemove()->save();
 
-// 6. Remove unused keys only (keep missing)
-translations()->setLocale('id')
-    ->scanAndRemove()
-    ->save();
+// === SORTING ===
+// Sort keys A-Z
+translations()->setLocale('id')->sortKeys()->save();
 
-// 7. Clean up (remove empty values + sort)
-translations()->setLocale('id')
-    ->clean()
-    ->save();
+// Sort keys Z-A
+translations()->setLocale('id')->sortKeys(false)->save();
 
-// 8. Check translation progress
+// === CLEANING ===
+// Remove empty values + sort
+translations()->setLocale('id')->clean()->save();
+
+// Remove empty values only
+translations()->setLocale('id')->removeEmpty()->save();
+
+// Remove duplicate keys (re-read file)
+translations()->setLocale('id')->removeDuplicates()->save();
+
+// === FILTERING ===
+// Get only untranslated items (key === value)
+$untranslated = translations()->setLocale('id')->onlyUntranslated()->get();
+
+// Get only translated items (key !== value)
+$translated = translations()->setLocale('id')->onlyTranslated()->get();
+
+// === STATISTICS ===
+// Get translation stats
 $stats = translations()->setLocale('id')->stats();
 // ['total' => 100, 'translated' => 85, 'untranslated' => 15, 'percentage' => 85.0]
+
+// Count and checks
+$count = translations()->setLocale('id')->count();
+$isEmpty = translations()->setLocale('id')->isEmpty();
+$isNotEmpty = translations()->setLocale('id')->isNotEmpty();
+
+// === TRANSFORMING ===
+// Apply custom transformation
+$result = translations($data)
+    ->transform(fn($t) => array_map('strtoupper', $t))
+    ->get();
+
+// Merge with another array
+$merged = translations($data)->merge(['New Key' => 'New Value'])->get();
+
+// === OUTPUT ===
+// Get as array
+$array = translations()->setLocale('id')->get();
+$array = translations()->setLocale('id')->toArray();
+
+// Get as JSON string
+$json = translations()->setLocale('id')->toJson();
+
+// Save to specific file
+translations($data)->sortKeys()->save('lang/en.json');
 ```
 
 **Available chainable methods:**
 
 | Method | Description |
 |--------|-------------|
+| `setLocale($locale)` | Load locale file, enable auto-save |
+| `syncWith($path)` | Add missing + remove unused keys |
+| `scanAndAdd($path)` | Scan and add missing keys only |
+| `scanAndRemove($path)` | Scan and remove unused keys only |
 | `sortKeys($asc)` | Sort keys A-Z or Z-A |
-| `clean()` | Remove empty + sort |
-| `addMissing($keys)` | Add missing keys |
-| `removeUnused($keys)` | Remove unused keys |
-| `syncWith($path)` | Sync (add missing + remove unused) |
-| `scanAndAdd($path)` | Scan and add missing keys |
-| `scanAndRemove($path)` | Scan and remove unused keys |
-| `setLocale($locale)` | Load locale, enable auto-save |
-| `removeDuplicates()` | Re-read and remove duplicate keys |
-| `removeEmpty()` | Remove empty values |
-| `onlyTranslated()` | Keep only translated |
-| `onlyUntranslated()` | Keep only untranslated |
-| `merge($array)` | Merge another array |
-| `transform($fn)` | Apply custom transform |
+| `clean()` | Remove empty values + sort |
+| `removeEmpty()` | Remove empty values only |
+| `removeDuplicates()` | Re-read file and remove duplicates |
+| `addMissing($keys)` | Add missing keys from array |
+| `removeUnused($keys)` | Remove unused keys from array |
+| `onlyTranslated()` | Filter to translated items only |
+| `onlyUntranslated()` | Filter to untranslated items only |
+| `merge($array)` | Merge with another array |
+| `transform($fn)` | Apply custom transformation |
+| `stats()` | Get translation statistics |
+| `count()` | Get total count |
+| `isEmpty()` / `isNotEmpty()` | Check if empty |
+| `get()` / `toArray()` | Get as array |
+| `toJson()` | Get as JSON string |
 | `save($path)` | Save to file |
-| `toJson()` | Export as JSON string |
-| `get()` / `toArray()` | Get array |
-| `stats()` | Get statistics |
-| `count()` | Get count |
-| `isEmpty()` / `isNotEmpty()` | Check empty |
 
 ##### Loading & Saving Files
 
@@ -259,28 +293,16 @@ $cleaned = Trans::removeUnused($translations, $foundKeys);
 
 #### Helper Functions
 
-All Trans methods have global helper function wrappers:
+The `translations()` helper provides a fluent interface for all translation operations:
 
-| Function | Description |
-|----------|-------------|
-| `trans_duplicates($json)` | Find duplicate keys in JSON |
-| `trans_has_duplicates($json)` | Check if has duplicates |
-| `trans_extract_keys($content)` | Extract keys from file content |
-| `trans_missing($trans, $keys)` | Find missing keys |
-| `trans_has_missing($trans, $keys)` | Check if has missing keys |
-| `trans_unused($trans, $keys)` | Find unused keys |
-| `trans_has_unused($trans, $keys)` | Check if has unused keys |
-| `translations($arr)` | Create TransBuilder for chaining |
-
-Example:
 ```php
-$translations = json_decode(file_get_contents('lang/id.json'), true);
+// Create TransBuilder instance
+$builder = translations(['Hello' => 'Hello', 'World' => 'Dunia']);
 
-trans_stats($translations);
-// ['total' => 100, 'translated' => 85, 'untranslated' => 15, 'percentage' => 85.0]
-
-trans_untranslated($translations);
-// ['Hello' => 'Hello', 'Yes' => 'Yes']
+// Or load from locale file with auto-save
+translations()->setLocale('id')
+    ->syncWith()
+    ->save();
 ```
 
 #### Artisan Command

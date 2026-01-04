@@ -147,105 +147,6 @@ if (! function_exists('parse_date_format')) {
 |
 */
 
-if (! function_exists('trans_duplicates')) {
-    /**
-     * Find duplicate keys in raw JSON content.
-     *
-     * @param  string  $jsonContent  Raw JSON file content
-     * @return array<string, int>  Array of duplicate keys with their occurrence count
-     */
-    function trans_duplicates(string $jsonContent): array
-    {
-        return \Kanekescom\Helperia\Support\Trans::duplicates($jsonContent);
-    }
-}
-
-if (! function_exists('trans_has_duplicates')) {
-    /**
-     * Check if JSON content has duplicate keys.
-     *
-     * @param  string  $jsonContent  Raw JSON file content
-     * @return bool
-     */
-    function trans_has_duplicates(string $jsonContent): bool
-    {
-        return \Kanekescom\Helperia\Support\Trans::hasDuplicates($jsonContent);
-    }
-}
-
-if (! function_exists('trans_extract_keys')) {
-    /**
-     * Extract translation keys from file content.
-     *
-     * Matches patterns like __('text'), @lang('text'), trans('text')
-     *
-     * @param  string  $content  File content
-     * @return array<string>  Array of translation keys found
-     */
-    function trans_extract_keys(string $content): array
-    {
-        return \Kanekescom\Helperia\Support\Trans::extractKeys($content);
-    }
-}
-
-if (! function_exists('trans_missing')) {
-    /**
-     * Find translation keys that are missing from the translation array.
-     *
-     * @param  array<string, string>  $translations  Existing translations
-     * @param  array<string>  $keys  Keys found in source files
-     * @return array<string>  Array of missing keys
-     */
-    function trans_missing(array $translations, array $keys): array
-    {
-        return \Kanekescom\Helperia\Support\Trans::missing($translations, $keys);
-    }
-}
-
-if (! function_exists('trans_has_missing')) {
-    /**
-     * Check if there are missing translation keys.
-     *
-     * @param  array<string, string>  $translations  Existing translations
-     * @param  array<string>  $keys  Keys found in source files
-     * @return bool
-     */
-    function trans_has_missing(array $translations, array $keys): bool
-    {
-        return \Kanekescom\Helperia\Support\Trans::hasMissing($translations, $keys);
-    }
-}
-
-if (! function_exists('trans_unused')) {
-    /**
-     * Find unused translation keys.
-     *
-     * Returns keys that exist in translations but are not found in source files.
-     *
-     * @param  array<string, string>  $translations  Existing translations
-     * @param  array<string>  $usedKeys  Keys found in source files
-     * @return array<string>  Array of unused keys
-     */
-    function trans_unused(array $translations, array $usedKeys): array
-    {
-        return \Kanekescom\Helperia\Support\Trans::unused($translations, $usedKeys);
-    }
-}
-
-if (! function_exists('trans_has_unused')) {
-    /**
-     * Check if there are unused translation keys.
-     *
-     * @param  array<string, string>  $translations  Existing translations
-     * @param  array<string>  $usedKeys  Keys found in source files
-     * @return bool
-     */
-    function trans_has_unused(array $translations, array $usedKeys): bool
-    {
-        return \Kanekescom\Helperia\Support\Trans::hasUnused($translations, $usedKeys);
-    }
-}
-
 if (! function_exists('translations')) {
 
     /**
@@ -256,12 +157,6 @@ if (! function_exists('translations')) {
      *
      * @param  array<string, string>  $translations
      * @return \Kanekescom\Helperia\Support\TransBuilder
-     *
-     * @example
-     * translations($data)
-     *     ->addMissing($keys)
-     *     ->sortKeys()
-     *     ->save('lang/id.json');
      */
     function translations(array $translations = []): \Kanekescom\Helperia\Support\TransBuilder
     {
