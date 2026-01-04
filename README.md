@@ -265,12 +265,6 @@ All Trans methods have global helper function wrappers:
 |----------|-------------|
 | `trans_duplicates($json)` | Find duplicate keys in JSON |
 | `trans_has_duplicates($json)` | Check if has duplicates |
-| `trans_sort_keys($arr, $asc)` | Sort keys alphabetically |
-| `trans_untranslated($arr)` | Find untranslated items |
-| `trans_has_untranslated($arr)` | Check if has untranslated |
-| `trans_translated($arr)` | Find translated items |
-| `trans_stats($arr)` | Get translation statistics |
-| `trans_clean($arr)` | Remove empty + sort keys |
 | `trans_extract_keys($content)` | Extract keys from file content |
 | `trans_missing($trans, $keys)` | Find missing keys |
 | `trans_has_missing($trans, $keys)` | Check if has missing keys |

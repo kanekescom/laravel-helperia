@@ -56,7 +56,7 @@ class TransBuilder
     /**
      * Set locale and load translations (instance method).
      *
-     * Allows chaining from translations() helper: translations()->forLocale('id')
+     * Allows chaining from translations() helper: translations()->setLocale('id')
      *
      * @param  string  $locale  Locale code (e.g., 'id', 'en')
      * @return $this
@@ -77,7 +77,7 @@ class TransBuilder
     /**
      * Re-read file and remove duplicate keys.
      *
-     * Only works when locale is set via forLocale().
+     * Only works when locale is set via setLocale().
      * Keeps the last occurrence of duplicate keys.
      *
      * @return $this
@@ -295,7 +295,7 @@ class TransBuilder
     {
         if ($filePath === null) {
             if ($this->locale === null) {
-                throw new \InvalidArgumentException('No file path provided. Either pass a path or use forLocale().');
+                throw new \InvalidArgumentException('No file path provided. Either pass a path or use setLocale().');
             }
             $filePath = lang_path("{$this->locale}.json");
         }
