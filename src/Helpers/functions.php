@@ -136,3 +136,118 @@ if (! function_exists('parse_date_format')) {
         }
     }
 }
+
+/*
+|--------------------------------------------------------------------------
+| Translation Helper Functions
+|--------------------------------------------------------------------------
+|
+| These functions are wrappers around the Trans class for convenience.
+| For more features, use Kanekescom\Helperia\Support\Trans directly.
+|
+*/
+
+if (! function_exists('trans_duplicates')) {
+    /**
+     * Find duplicate keys in raw JSON content.
+     *
+     * @param  string  $jsonContent  Raw JSON file content
+     * @return array<string, int>  Array of duplicate keys with their occurrence count
+     */
+    function trans_duplicates(string $jsonContent): array
+    {
+        return \Kanekescom\Helperia\Support\Trans::duplicates($jsonContent);
+    }
+}
+
+if (! function_exists('trans_sort_keys')) {
+    /**
+     * Sort translation array by keys alphabetically.
+     *
+     * @param  array<string, string>  $translations
+     * @param  bool  $ascending  Sort ascending (A-Z) if true, descending (Z-A) if false
+     * @return array<string, string>
+     */
+    function trans_sort_keys(array $translations, bool $ascending = true): array
+    {
+        return \Kanekescom\Helperia\Support\Trans::sortKeys($translations, $ascending);
+    }
+}
+
+if (! function_exists('trans_untranslated')) {
+    /**
+     * Find untranslated items where key equals value.
+     *
+     * @param  array<string, string>  $translations
+     * @return array<string, string>  Array of untranslated items
+     */
+    function trans_untranslated(array $translations): array
+    {
+        return \Kanekescom\Helperia\Support\Trans::untranslated($translations);
+    }
+}
+
+if (! function_exists('trans_has_untranslated')) {
+    /**
+     * Check if translation array has any untranslated items.
+     *
+     * @param  array<string, string>  $translations
+     * @return bool
+     */
+    function trans_has_untranslated(array $translations): bool
+    {
+        return \Kanekescom\Helperia\Support\Trans::hasUntranslated($translations);
+    }
+}
+
+if (! function_exists('trans_stats')) {
+    /**
+     * Get translation statistics.
+     *
+     * @param  array<string, string>  $translations
+     * @return array{total: int, translated: int, untranslated: int, percentage: float}
+     */
+    function trans_stats(array $translations): array
+    {
+        return \Kanekescom\Helperia\Support\Trans::stats($translations);
+    }
+}
+
+if (! function_exists('trans_has_duplicates')) {
+    /**
+     * Check if JSON content has duplicate keys.
+     *
+     * @param  string  $jsonContent  Raw JSON file content
+     * @return bool
+     */
+    function trans_has_duplicates(string $jsonContent): bool
+    {
+        return \Kanekescom\Helperia\Support\Trans::hasDuplicates($jsonContent);
+    }
+}
+
+if (! function_exists('trans_translated')) {
+    /**
+     * Find translated items where key differs from value.
+     *
+     * @param  array<string, string>  $translations
+     * @return array<string, string>  Array of translated items
+     */
+    function trans_translated(array $translations): array
+    {
+        return \Kanekescom\Helperia\Support\Trans::translated($translations);
+    }
+}
+
+if (! function_exists('trans_clean')) {
+    /**
+     * Clean translation array (remove empty values and sort keys).
+     *
+     * @param  array<string, string>  $translations
+     * @return array<string, string>
+     */
+    function trans_clean(array $translations): array
+    {
+        return \Kanekescom\Helperia\Support\Trans::clean($translations);
+    }
+}

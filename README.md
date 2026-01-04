@@ -49,6 +49,160 @@ parse_date_format('2024-01-01', 'd M Y'); // "01 Jan 2024"
 parse_date_format('2024-01-01 10:30:00', 'd M Y H:i:s');
 ```
 
+---
+
+### Translation Utilities
+
+Tools for managing JSON translation files (like `lang/id.json`).
+
+#### Trans Class
+
+Use the `Trans` class for comprehensive translation operations:
+
+```php
+use Kanekescom\Helperia\Support\Trans;
+```
+
+##### Loading & Saving Files
+
+```php
+// Load translation file
+$data = Trans::load('lang/id.json');
+// Returns: ['content' => '...', 'translations' => [...]]
+
+// Save translation array to file (auto-sorts by default)
+Trans::save('lang/id.json', $translations);
+Trans::save('lang/id.json', $translations, false); // Don't sort
+```
+
+##### Finding Translation Issues
+
+```php
+$translations = json_decode(file_get_contents('lang/id.json'), true);
+
+// Find untranslated items (where key = value)
+Trans::untranslated($translations);
+// Returns: ['Hello' => 'Hello', 'Yes' => 'Yes']
+
+// Find translated items (where key ≠ value)
+Trans::translated($translations);
+// Returns: ['Hello' => 'Halo', 'Yes' => 'Ya']
+
+// Check if has untranslated items
+Trans::hasUntranslated($translations); // true or false
+```
+
+##### Finding Duplicates
+
+```php
+$jsonContent = file_get_contents('lang/id.json');
+
+// Find duplicate keys in raw JSON (before PHP merges them)
+Trans::duplicates($jsonContent);
+// Returns: ['DuplicateKey' => 2, 'AnotherDupe' => 3]
+
+// Check if has duplicates
+Trans::hasDuplicates($jsonContent); // true or false
+
+// Remove duplicates (PHP keeps last occurrence)
+$clean = Trans::removeDuplicates($jsonContent);
+```
+
+##### Statistics & Cleanup
+
+```php
+// Get translation statistics
+Trans::stats($translations);
+// Returns: [
+//     'total' => 100,
+//     'translated' => 85,
+//     'untranslated' => 15,
+//     'percentage' => 85.0
+// ]
+
+// Sort keys alphabetically
+Trans::sortKeys($translations);       // A-Z
+Trans::sortKeys($translations, false); // Z-A
+
+// Clean array (remove empty values + sort keys)
+Trans::clean($translations);
+
+// Export to formatted JSON
+Trans::toJson($translations);
+Trans::toJson($translations, false); // Don't sort
+```
+
+#### Helper Functions
+
+All Trans methods have global helper function wrappers:
+
+| Function | Description |
+|----------|-------------|
+| `trans_duplicates($json)` | Find duplicate keys in JSON |
+| `trans_has_duplicates($json)` | Check if has duplicates |
+| `trans_sort_keys($arr, $asc)` | Sort keys alphabetically |
+| `trans_untranslated($arr)` | Find untranslated items |
+| `trans_has_untranslated($arr)` | Check if has untranslated |
+| `trans_translated($arr)` | Find translated items |
+| `trans_stats($arr)` | Get translation statistics |
+| `trans_clean($arr)` | Remove empty + sort keys |
+
+Example:
+```php
+$translations = json_decode(file_get_contents('lang/id.json'), true);
+
+trans_stats($translations);
+// ['total' => 100, 'translated' => 85, 'untranslated' => 15, 'percentage' => 85.0]
+
+trans_untranslated($translations);
+// ['Hello' => 'Hello', 'Yes' => 'Yes']
+```
+
+#### Artisan Command
+
+Manage translation files via command line:
+
+```bash
+# Basic usage - specify locale (auto-resolves to lang/{locale}.json)
+php artisan helperia:trans id
+
+# Check for issues (duplicates, untranslated items)
+php artisan helperia:trans id --check
+
+# Sort keys alphabetically and save
+php artisan helperia:trans id --sort
+
+# Remove duplicate keys (keeps last occurrence)
+php artisan helperia:trans id --remove-duplicates
+
+# Show detailed statistics
+php artisan helperia:trans id --stats
+
+# Combine options
+php artisan helperia:trans id --check --remove-duplicates --sort
+
+# Use full path if needed
+php artisan helperia:trans lang/id.json --check
+```
+
+**Command Output Example:**
+```
+Analyzing: lang/id.json
+
+Total keys .......................................... 150
+Translated .......................................... 142
+Untranslated ......................................... 8
+Progress ......................................... 94.67%
+
+✓ No duplicate keys found
+⚠ 8 untranslated items (key = value):
+  • Hello
+  • World
+  ...
+```
+
+---
+
 ### Support Classes
 
 #### ClassExtender
@@ -57,7 +211,6 @@ A base class for wrapping other classes and forwarding method calls:
 
 ```php
 use Kanekescom\Helperia\Support\ClassExtender;
-use Kanekescom\Helperia\Traits\HasMethodCaller;
 
 class MyWrapper extends ClassExtender
 {
@@ -91,11 +244,7 @@ class MyClass
 }
 ```
 
-### Facade
-
-```php
-use Kanekescom\Helperia\Facades\Helperia;
-```
+---
 
 ## Testing
 
