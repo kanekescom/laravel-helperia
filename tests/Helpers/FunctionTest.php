@@ -24,6 +24,14 @@ it('matches private methods', function () {
     ]);
 });
 
+it('matches all methods', function () {
+    $methods = method_all(\Kanekescom\Helperia\Tests\Helpers\MyClass::class);
+
+    expect($methods->toArray())->toContain('a');
+    expect($methods->toArray())->toContain('b');
+    expect($methods->toArray())->toContain('c');
+});
+
 it('can convert date format with invalid format (null)', function () {
     $convert = convert_date_format(null, 'd-m-Y', 'Y-m-d');
 
@@ -61,13 +69,13 @@ it('can parse date format with invalid format ("")', function () {
 });
 
 it('can parse date format with valid format', function () {
-    $convert = parse_date_format('01-01-2024', 'Y-m-d');
+    $convert = parse_date_format('2024-01-01', 'Y-m-d');
 
     expect($convert)->toBe('2024-01-01');
 });
 
 it('can parse datetime format with valid format', function () {
-    $convert = parse_date_format('01-01-2024 01:01:01', 'Y-m-d H:i:s');
+    $convert = parse_date_format('2024-01-01 01:01:01', 'Y-m-d H:i:s');
 
     expect($convert)->toBe('2024-01-01 01:01:01');
 });
