@@ -1,22 +1,19 @@
-# Laravel Helperia
+# Laravel helper package for speeding up application development
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/kanekescom/laravel-helperia.svg?style=flat-square)](https://packagist.org/packages/kanekescom/laravel-helperia)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/kanekescom/laravel-helperia/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/kanekescom/laravel-helperia/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/kanekescom/laravel-helperia/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/kanekescom/laravel-helperia/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/kanekescom/laravel-helperia.svg?style=flat-square)](https://packagist.org/packages/kanekescom/laravel-helperia)
 
-Helper for rapid Laravel development improvements.
-This library is a function and class to help improve Laravel development.
+This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
 
 ## Support us
 
-Want to provide tangible support? Use the following platform to contribute to open-source software developers. Every contribution you make is a significant boost to continue building and enhancing technology that benefits everyone.
+[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/laravel-helperia.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/laravel-helperia)
 
-- Buy Me a Coffee https://s.id/hadibmac
-- Patreon https://s.id/hadipatreon
-- Saweria https://s.id/hadisaweria
+We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
 
-We highly appreciate you sending us a few cups of coffee to accompany us while writing code. Super thanks.
+We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
 
 ## Installation
 
@@ -26,75 +23,37 @@ You can install the package via composer:
 composer require kanekescom/laravel-helperia
 ```
 
+You can publish and run the migrations with:
+
+```bash
+php artisan vendor:publish --tag="laravel-helperia-migrations"
+php artisan migrate
+```
+
+You can publish the config file with:
+
+```bash
+php artisan vendor:publish --tag="laravel-helperia-config"
+```
+
+This is the contents of the published config file:
+
+```php
+return [
+];
+```
+
+Optionally, you can publish the views using
+
+```bash
+php artisan vendor:publish --tag="laravel-helperia-views"
+```
+
 ## Usage
 
-### HasMethodCaller
-
-Make your class return the functionality of another class. This is useful when you want your logic to be returned as another class, Laravel Collection for example.
-
-Here's an example of how to use it to make your classes feel like Laravel Collections.
-
 ```php
-use Kanekescom\Helperia\Traits\HasMethodCaller;
-
-class MyClass
-{
-    use HasMethodCaller;
-
-    protected $class;
-
-    public function __construct($array = [])
-    {
-        $this->class = collect($array);
-    }
-}
-```
-
-or use `ClassExtender` instead
-
-### ClassExtender
-
-```php
-use Kanekescom\Helperia\Support\ClassExtender;
-
-class MyClass extends ClassExtender
-{
-    public function __construct($array = [])
-    {
-        $this->class = collect($array);
-    }
-}
-```
-
-### Get Methods of Class
-
-Get the methods that a class has based on its visibility type. Returned as Laravel Collection.
-
-Get public methods
-```php
-method_public(MyClass::class);
-```
-
-Get protected methods
-```php
-method_protected(MyClass::class);
-```
-
-Get private methods
-```php
-method_private(MyClass::class);
-```
-
-### Convert Date
-
-Convert date format
-```php
-convert_date_format('01-01-2024', 'd-m-Y', 'Y-m-d', $default = null);
-```
-
-Parse date to format.
-```php
-parse_date_format('01-01-2024', 'Y-m-d', $default = null);
+$helperia = new Kanekescom\Helperia();
+echo $helperia->echoPhrase('Hello, Kanekescom!');
 ```
 
 ## Testing
@@ -117,7 +76,7 @@ Please review [our security policy](../../security/policy) on how to report secu
 
 ## Credits
 
-- [Achmad Hadi Kurnia](https://github.com/kanekescom)
+- [Achmad Hadi Kurnia](https://github.com/achmadhadikurnia)
 - [All Contributors](../../contributors)
 
 ## License
