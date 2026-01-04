@@ -73,6 +73,48 @@ Use the `Trans` class for comprehensive translation operations:
 use Kanekescom\Helperia\Support\Trans;
 ```
 
+##### Fluent Builder API (Method Chaining)
+
+Use `Trans::make()` for fluent, chainable operations:
+
+```php
+// Clean up and save translations in one chain
+Trans::make($translations)
+    ->addMissing($keysFromViews)
+    ->removeEmpty()
+    ->sortKeys()
+    ->save('lang/id.json');
+
+// Get cleaned array
+$cleaned = Trans::make($translations)
+    ->clean()
+    ->get();
+
+// Filter and export
+$json = Trans::make($translations)
+    ->onlyUntranslated()
+    ->toJson();
+```
+
+**Available chainable methods:**
+
+| Method | Description |
+|--------|-------------|
+| `sortKeys($asc)` | Sort keys A-Z or Z-A |
+| `clean()` | Remove empty + sort |
+| `addMissing($keys)` | Add missing keys |
+| `removeEmpty()` | Remove empty values |
+| `onlyTranslated()` | Keep only translated |
+| `onlyUntranslated()` | Keep only untranslated |
+| `merge($array)` | Merge another array |
+| `transform($fn)` | Apply custom transform |
+| `save($path)` | Save to file |
+| `toJson()` | Export as JSON string |
+| `get()` / `toArray()` | Get array |
+| `stats()` | Get statistics |
+| `count()` | Get count |
+| `isEmpty()` / `isNotEmpty()` | Check empty |
+
 ##### Loading & Saving Files
 
 ```php
@@ -180,6 +222,7 @@ All Trans methods have global helper function wrappers:
 | `trans_extract_keys($content)` | Extract keys from file content |
 | `trans_missing($trans, $keys)` | Find missing keys |
 | `trans_has_missing($trans, $keys)` | Check if has missing keys |
+| `trans_make($arr)` | Create TransBuilder for chaining |
 
 Example:
 ```php

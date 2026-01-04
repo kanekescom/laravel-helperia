@@ -11,6 +11,23 @@ namespace Kanekescom\Helperia\Support;
 class Trans
 {
     /**
+     * Create a new TransBuilder instance for fluent operations.
+     *
+     * @param  array<string, string>  $translations
+     * @return TransBuilder
+     *
+     * @example
+     * Trans::make($translations)
+     *     ->addMissing($keys)
+     *     ->sortKeys()
+     *     ->save('lang/id.json');
+     */
+    public static function make(array $translations = []): TransBuilder
+    {
+        return new TransBuilder($translations);
+    }
+
+    /**
      * Find duplicate keys in raw JSON content.
      *
      * Since PHP arrays cannot have duplicate keys, this function

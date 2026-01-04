@@ -294,3 +294,22 @@ if (! function_exists('trans_has_missing')) {
         return \Kanekescom\Helperia\Support\Trans::hasMissing($translations, $keys);
     }
 }
+
+if (! function_exists('trans_make')) {
+    /**
+     * Create a new TransBuilder instance for fluent operations.
+     *
+     * @param  array<string, string>  $translations
+     * @return \Kanekescom\Helperia\Support\TransBuilder
+     *
+     * @example
+     * trans_make($translations)
+     *     ->addMissing($keys)
+     *     ->sortKeys()
+     *     ->save('lang/id.json');
+     */
+    function trans_make(array $translations = []): \Kanekescom\Helperia\Support\TransBuilder
+    {
+        return \Kanekescom\Helperia\Support\Trans::make($translations);
+    }
+}
