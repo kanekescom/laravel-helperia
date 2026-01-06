@@ -5,9 +5,8 @@ on:
     types: [released]
 
 jobs:
-  update-changelog:
+  changelog:
     runs-on: ubuntu-latest
-
     permissions:
       contents: write
 
@@ -23,16 +22,22 @@ jobs:
           php-version: "8.3"
           tools: composer:v2
 
-      - name: Install Composer dependencies
+      - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
 
-      - name: Fix PHP 8.3 portable-ascii compatibility
+      - name: Fix PHP 8.3 portable-ascii
         run: composer require voku/portable-ascii:^2.0 --update-with-all-dependencies
 
-      - name: Update CHANGELOG using CLI
-        run: vendor/bin/changelog-updater \
-              --latest-version="${{ github.event.release.tag_name }}" \
-              --release-notes="${{ github.event.release.body }}"
+      - name: Download changelog-updater PHAR
+        run: |
+          curl -L -o changelog-updater.phar https://github.com/claudiodekker/changelog-updater/releases/latest/download/changelog-updater.phar
+          chmod +x changelog-updater.phar
+
+      - name: Update CHANGELOG
+        run: |
+          php changelog-updater.phar \
+            --latest-version="${{ github.event.release.tag_name }}" \
+            --release-notes="${{ github.event.release.body }}"
 
       - name: Commit updated CHANGELOG
         uses: stefanzweifel/git-auto-commit-action@v5
