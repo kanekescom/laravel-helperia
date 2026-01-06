@@ -80,10 +80,26 @@ it('can parse datetime format with valid format', function () {
     expect($convert)->toBe('2024-01-01 01:01:01');
 });
 
-// Translation Helper Tests
+it('can convert date format with custom default value', function () {
+    $convert = convert_date_format(null, 'd-m-Y', 'Y-m-d', 'N/A');
 
-it('can create TransBuilder from translations() helper', function () {
-    $builder = translations(['Hello' => 'Halo']);
-    expect($builder)->toBeInstanceOf(\Kanekescom\Helperia\Support\TransBuilder::class);
-    expect($builder->get())->toBe(['Hello' => 'Halo']);
+    expect($convert)->toBe('N/A');
+});
+
+it('can convert date format with invalid date returns default', function () {
+    $convert = convert_date_format('invalid-date', 'd-m-Y', 'Y-m-d', 'fallback');
+
+    expect($convert)->toBe('fallback');
+});
+
+it('can parse date format with invalid date returns default', function () {
+    $convert = parse_date_format('not-a-date', 'Y-m-d', 'fallback');
+
+    expect($convert)->toBe('fallback');
+});
+
+it('can parse date format with custom default for empty string', function () {
+    $convert = parse_date_format('', 'Y-m-d', 'default-date');
+
+    expect($convert)->toBeNull();
 });

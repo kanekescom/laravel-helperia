@@ -20,10 +20,10 @@ if (! function_exists('method_public')) {
         $reflection = new ReflectionClass($className);
 
         return collect($reflection->getMethods(ReflectionMethod::IS_PUBLIC))
-            ->reject(fn(ReflectionMethod $method) => $method->isConstructor()
+            ->reject(fn (ReflectionMethod $method) => $method->isConstructor()
                 || $method->isDestructor()
                 || $method->isInternal())
-            ->map(fn(ReflectionMethod $method) => $method->getName());
+            ->map(fn (ReflectionMethod $method) => $method->getName());
     }
 }
 
@@ -39,10 +39,10 @@ if (! function_exists('method_protected')) {
         $reflection = new ReflectionClass($className);
 
         return collect($reflection->getMethods(ReflectionMethod::IS_PROTECTED))
-            ->reject(fn(ReflectionMethod $method) => $method->isConstructor()
+            ->reject(fn (ReflectionMethod $method) => $method->isConstructor()
                 || $method->isDestructor()
                 || $method->isInternal())
-            ->map(fn(ReflectionMethod $method) => $method->getName());
+            ->map(fn (ReflectionMethod $method) => $method->getName());
     }
 }
 
@@ -58,10 +58,10 @@ if (! function_exists('method_private')) {
         $reflection = new ReflectionClass($className);
 
         return collect($reflection->getMethods(ReflectionMethod::IS_PRIVATE))
-            ->reject(fn(ReflectionMethod $method) => $method->isConstructor()
+            ->reject(fn (ReflectionMethod $method) => $method->isConstructor()
                 || $method->isDestructor()
                 || $method->isInternal())
-            ->map(fn(ReflectionMethod $method) => $method->getName());
+            ->map(fn (ReflectionMethod $method) => $method->getName());
     }
 }
 
@@ -77,10 +77,10 @@ if (! function_exists('method_all')) {
         $reflection = new ReflectionClass($className);
 
         return collect($reflection->getMethods())
-            ->reject(fn(ReflectionMethod $method) => $method->isConstructor()
+            ->reject(fn (ReflectionMethod $method) => $method->isConstructor()
                 || $method->isDestructor()
                 || $method->isInternal())
-            ->map(fn(ReflectionMethod $method) => $method->getName());
+            ->map(fn (ReflectionMethod $method) => $method->getName());
     }
 }
 
@@ -98,7 +98,6 @@ if (! function_exists('convert_date_format')) {
      * @param  string  $input  The input date format
      * @param  string  $output  The output date format
      * @param  mixed  $default  The default value if conversion fails
-     * @return string|null
      */
     function convert_date_format(?string $value, string $input, string $output, mixed $default = null): ?string
     {
@@ -121,7 +120,6 @@ if (! function_exists('parse_date_format')) {
      * @param  string|null  $value  The date string to parse
      * @param  string  $format  The output format
      * @param  mixed  $default  The default value if parsing fails
-     * @return string|null
      */
     function parse_date_format(?string $value, string $format, mixed $default = null): ?string
     {
@@ -134,32 +132,5 @@ if (! function_exists('parse_date_format')) {
         } catch (Exception) {
             return $default;
         }
-    }
-}
-
-/*
-|--------------------------------------------------------------------------
-| Translation Helper Functions
-|--------------------------------------------------------------------------
-|
-| These functions are wrappers around the Trans class for convenience.
-| For more features, use Kanekescom\Helperia\Support\Trans directly.
-|
-*/
-
-if (! function_exists('translations')) {
-
-    /**
-     * Create a new TransBuilder instance for fluent operations.
-     *
-     * Similar to Laravel's collect() helper, this provides a fluent
-     * interface for working with translation arrays.
-     *
-     * @param  array<string, string>  $translations
-     * @return \Kanekescom\Helperia\Support\TransBuilder
-     */
-    function translations(array $translations = []): \Kanekescom\Helperia\Support\TransBuilder
-    {
-        return \Kanekescom\Helperia\Support\Trans::make($translations);
     }
 }

@@ -15,9 +15,7 @@ trait HasMethodCaller
     /**
      * Handle dynamic method calls.
      *
-     * @param  string  $method
      * @param  array<mixed>  $parameters
-     * @return mixed
      *
      * @throws BadMethodCallException
      */
@@ -37,9 +35,7 @@ trait HasMethodCaller
     /**
      * Handle dynamic static method calls.
      *
-     * @param  string  $method
      * @param  array<mixed>  $parameters
-     * @return mixed
      *
      * @throws BadMethodCallException
      */

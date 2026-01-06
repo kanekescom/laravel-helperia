@@ -2,7 +2,6 @@
 
 namespace Kanekescom\Helperia;
 
-use Kanekescom\Helperia\Commands\TransCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -19,7 +18,6 @@ class HelperiaServiceProvider extends PackageServiceProvider
     public function configurePackage(Package $package): void
     {
         $package
-            ->name('laravel-helperia')
-            ->hasCommand(TransCommand::class);
+            ->name('laravel-helperia');
     }
 }
