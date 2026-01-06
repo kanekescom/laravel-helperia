@@ -1,31 +1,42 @@
-name: "Update Changelog"
+name: "Update CHANGELOG"
 
 on:
   release:
     types: [released]
 
 jobs:
-  update:
+  update-changelog:
     runs-on: ubuntu-latest
 
     permissions:
       contents: write
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.release.target_commitish }}
+          fetch-depth: 0
 
-      - name: Update Changelog
-        uses: stefanzweifel/changelog-updater-action@v1
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          latest-version: ${{ github.event.release.tag_name }}
-          release-notes: ${{ github.event.release.body }}
+          php-version: "8.3"
+          tools: composer:v2
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Fix PHP 8.3 portable-ascii compatibility
+        run: composer require voku/portable-ascii:^2.0 --update-with-all-dependencies
+
+      - name: Update CHANGELOG using CLI
+        run: vendor/bin/changelog-updater \
+              --latest-version="${{ github.event.release.tag_name }}" \
+              --release-notes="${{ github.event.release.body }}"
 
       - name: Commit updated CHANGELOG
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           branch: ${{ github.event.release.target_commitish }}
-          commit_message: Update CHANGELOG
+          commit_message: "Update CHANGELOG"
           file_pattern: CHANGELOG.md
